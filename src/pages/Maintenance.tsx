@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Plus, Search, Filter, Wrench, Clock, CheckCircle2, AlertTriangle, Eye, Edit, Ticket, MapPin, Loader2 } from 'lucide-react';
 import FormDialog, { FormField } from '@/components/FormDialog';
 import { supabase } from '@/integrations/supabase/client';
@@ -90,6 +91,7 @@ const Maintenance = () => {
   const [tickets, setTickets] = useState<TicketRow[]>([]);
   const [loadingTickets, setLoadingTickets] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const fetchTickets = async () => {
     setLoadingTickets(true);
@@ -223,7 +225,7 @@ const Maintenance = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {tickets.map(ticket => (
-                <div key={ticket.id} className="bg-card rounded-xl border p-5 hover:shadow-lg transition-shadow">
+                <div key={ticket.id} className="bg-card rounded-xl border p-5 hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate(`/maintenance/ticket/${ticket.id}`)}>
                   <div className="flex items-center justify-between mb-3">
                     <span className="font-mono text-sm font-semibold text-primary">{ticket.ticket_number}</span>
                     <span className={`badge-status ${statusStyle(ticket.status)}`}>{ticketStatusLabels[ticket.status] || ticket.status}</span>
@@ -260,7 +262,7 @@ const Maintenance = () => {
 
                   {/* Status change */}
                   {ticket.status !== 'closed' && ticket.status !== 'resolved' && (
-                    <div className="mt-4 pt-3 border-t">
+                    <div className="mt-4 pt-3 border-t" onClick={e => e.stopPropagation()}>
                       <select
                         value={ticket.status}
                         onChange={e => handleStatusChange(ticket.id, e.target.value)}

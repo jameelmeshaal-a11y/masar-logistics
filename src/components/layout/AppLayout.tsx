@@ -3,10 +3,11 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, ShoppingCart, Truck, Wrench, Warehouse,
   Users, MapPin, Shield, DollarSign, BarChart3, MessageCircle,
-  BookOpen, ChevronDown, Menu, X, Bell, Search, LogOut, Settings
+  BookOpen, ChevronDown, Menu, X, Search, LogOut, Settings
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import ThemeSwitcher from '@/components/ThemeSwitcher';
+import NotificationBell from '@/components/notifications/NotificationBell';
 
 interface NavItem {
   label: string;
@@ -203,10 +204,7 @@ const AppLayout: React.FC<LayoutProps> = ({ children }) => {
           </div>
           <div className="flex items-center gap-2">
             <ThemeSwitcher />
-            <button className="relative p-2 rounded-lg text-muted-foreground hover:bg-muted transition-colors">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1 left-1 w-2 h-2 bg-accent rounded-full" />
-            </button>
+            <NotificationBell />
           </div>
         </header>
         <main className="p-4 lg:p-6 animate-fade-in">{children}</main>

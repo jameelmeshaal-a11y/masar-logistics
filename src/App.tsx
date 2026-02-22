@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Procurement from "./pages/Procurement";
 import Fleet from "./pages/Fleet";
 import Maintenance from "./pages/Maintenance";
+import TicketDetails from "./pages/TicketDetails";
 import Warehousing from "./pages/Warehousing";
 import Drivers from "./pages/Drivers";
 import Tracking from "./pages/Tracking";
@@ -51,7 +52,8 @@ const App = () => (
                       <Route path="/" element={<Dashboard />} />
                       <Route path="/procurement/*" element={<Procurement />} />
                       <Route path="/fleet/*" element={<Fleet />} />
-                      <Route path="/maintenance/*" element={<Maintenance />} />
+                      <Route path="/maintenance" element={<Maintenance />} />
+                      <Route path="/maintenance/ticket/:id" element={<TicketDetails />} />
                       <Route path="/warehouse/*" element={<Warehousing />} />
                       <Route path="/drivers" element={<Drivers />} />
                       <Route path="/tracking" element={<Tracking />} />

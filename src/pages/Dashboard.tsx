@@ -92,13 +92,18 @@ const Dashboard = () => {
         {/* Truck Status Pie Chart */}
         <div className="bg-card rounded-xl border p-5">
           <h2 className="text-lg font-bold font-heading mb-4">توزيع حالات الشاحنات</h2>
-          <ResponsiveContainer width="100%" height={250}>
+          <ResponsiveContainer width="100%" height={280}>
             <PieChart>
-              <Pie data={truckStatusData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} dataKey="value" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}>
+              <Pie data={truckStatusData} cx="50%" cy="45%" innerRadius={65} outerRadius={95} dataKey="value" paddingAngle={3}
+                label={({ name, percent, x, y }) => (
+                  <text x={x} y={y} textAnchor="middle" dominantBaseline="central" className="text-xs fill-foreground font-medium">
+                    {`${name} ${(percent * 100).toFixed(0)}%`}
+                  </text>
+                )}>
                 {truckStatusData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
               </Pie>
               <Tooltip />
-              <Legend />
+              <Legend wrapperStyle={{ paddingTop: '16px' }} />
             </PieChart>
           </ResponsiveContainer>
         </div>
