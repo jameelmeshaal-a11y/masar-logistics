@@ -23,15 +23,41 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
+
+    const initAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!mounted) return;
+        setSession(session);
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          try {
+            const r = await getUserRole(session.user.id);
+            if (mounted) setRole(r);
+          } catch {
+            if (mounted) setRole(null);
+          }
+        }
+      } catch {
+        // ignore
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    initAuth();
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!mounted) return;
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
         try {
           const r = await getUserRole(session.user.id);
-          setRole(r);
+          if (mounted) setRole(r);
         } catch {
-          setRole(null);
+          if (mounted) setRole(null);
         }
       } else {
         setRole(null);
@@ -39,21 +65,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     });
 
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        try {
-          const r = await getUserRole(session.user.id);
-          setRole(r);
-        } catch {
-          setRole(null);
-        }
-      }
-      setLoading(false);
-    }).catch(() => setLoading(false));
-
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signOut = async () => {
