@@ -1,31 +1,74 @@
-import { useState } from 'react';
-import { Send, Search, Plus, Users, AtSign, Paperclip, Smile } from 'lucide-react';
-
-const contacts = [
-  { id: 1, name: 'فريق التشغيل', type: 'group', lastMessage: 'تم تسليم الشحنة بنجاح', time: '10:30 ص', unread: 3 },
-  { id: 2, name: 'أحمد المالكي', type: 'user', lastMessage: 'أحتاج موافقة على أمر الشراء', time: '9:45 ص', unread: 1 },
-  { id: 3, name: 'فريق الصيانة', type: 'group', lastMessage: 'الشاحنة SH-005 جاهزة', time: 'أمس', unread: 0 },
-  { id: 4, name: 'خالد العمري', type: 'user', lastMessage: 'شكراً على التحديث', time: 'أمس', unread: 0 },
-  { id: 5, name: 'فريق المستودعات', type: 'group', lastMessage: 'تم استلام الشحنة من المورد', time: 'الأحد', unread: 0 },
-];
-
-const messages = [
-  { id: 1, sender: 'أحمد المالكي', text: 'السلام عليكم، أحتاج موافقة على أمر الشراء PO-0143 لشراء إطارات', time: '9:30 ص', isMine: false },
-  { id: 2, sender: 'أنت', text: 'وعليكم السلام، كم عدد الإطارات المطلوبة؟', time: '9:35 ص', isMine: true },
-  { id: 3, sender: 'أحمد المالكي', text: '16 إطار ميشلان 315/80 للشاحنات SH-012 و SH-034', time: '9:38 ص', isMine: false },
-  { id: 4, sender: 'أحمد المالكي', text: '@مدير_المشتريات يرجى مراجعة العرض المرفق', time: '9:40 ص', isMine: false, mention: true },
-  { id: 5, sender: 'أنت', text: 'تم المراجعة والموافقة. يرجى المتابعة مع المورد', time: '9:45 ص', isMine: true },
-];
+import { useState, useEffect, useRef } from 'react';
+import { Send, Search, Plus, Users, AtSign, Paperclip, Smile, Loader2, X } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
 
 const Chat = () => {
-  const [selectedContact, setSelectedContact] = useState(contacts[1]);
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [rooms, setRooms] = useState<any[]>([]);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [selectedRoom, setSelectedRoom] = useState<any>(null);
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showNewRoom, setShowNewRoom] = useState(false);
+  const [newRoomName, setNewRoomName] = useState('');
+  const messagesEnd = useRef<HTMLDivElement>(null);
+
+  const fetchRooms = async () => {
+    const { data } = await supabase.from('chat_rooms').select('*').order('created_at', { ascending: false });
+    if (data) {
+      setRooms(data);
+      if (!selectedRoom && data.length > 0) setSelectedRoom(data[0]);
+    }
+  };
+
+  const fetchMessages = async (roomId: string) => {
+    setLoading(true);
+    const { data } = await supabase.from('chat_messages').select('*').eq('room_id', roomId).order('created_at');
+    if (data) setMessages(data);
+    setLoading(false);
+    setTimeout(() => messagesEnd.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+  };
+
+  useEffect(() => { fetchRooms(); }, []);
+  useEffect(() => { if (selectedRoom) fetchMessages(selectedRoom.id); }, [selectedRoom]);
+
+  // Realtime
+  useEffect(() => {
+    if (!selectedRoom) return;
+    const channel = supabase.channel(`room-${selectedRoom.id}`).on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: `room_id=eq.${selectedRoom.id}` }, payload => {
+      setMessages(prev => [...prev, payload.new]);
+      setTimeout(() => messagesEnd.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+    }).subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [selectedRoom]);
+
+  const handleSend = async () => {
+    if (!message.trim() || !selectedRoom || !user) return;
+    const { error } = await supabase.from('chat_messages').insert({ content: message, room_id: selectedRoom.id, sender_id: user.id });
+    if (error) toast({ title: 'خطأ', description: error.message, variant: 'destructive' });
+    else setMessage('');
+  };
+
+  const handleCreateRoom = async () => {
+    if (!newRoomName.trim() || !user) return;
+    const { data, error } = await supabase.from('chat_rooms').insert({ name: newRoomName, created_by: user.id }).select().single();
+    if (error) toast({ title: 'خطأ', description: error.message, variant: 'destructive' });
+    else {
+      setShowNewRoom(false);
+      setNewRoomName('');
+      fetchRooms();
+      if (data) setSelectedRoom(data);
+    }
+  };
 
   return (
     <div className="space-y-6">
       <div className="page-header">
         <h1 className="page-title">المحادثات</h1>
-        <p className="page-subtitle">تواصل مع فريق العمل وإمكانية المنشن للأفراد والمجموعات</p>
+        <p className="page-subtitle">تواصل مع فريق العمل</p>
       </div>
 
       <div className="bg-card rounded-xl border overflow-hidden" style={{ height: 'calc(100vh - 220px)' }}>
@@ -39,82 +82,85 @@ const Chat = () => {
               </div>
             </div>
             <div className="flex-1 overflow-y-auto">
-              {contacts.map(contact => (
-                <button
-                  key={contact.id}
-                  onClick={() => setSelectedContact(contact)}
+              {rooms.map(room => (
+                <button key={room.id} onClick={() => setSelectedRoom(room)}
                   className={`w-full flex items-center gap-3 px-4 py-3 text-right hover:bg-muted/30 transition-colors border-b border-border/30
-                    ${selectedContact.id === contact.id ? 'bg-muted/50' : ''}`}
-                >
+                    ${selectedRoom?.id === room.id ? 'bg-muted/50' : ''}`}>
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                    {contact.type === 'group' ? <Users className="w-4 h-4 text-primary" /> : <span className="text-sm font-semibold text-primary">{contact.name.charAt(0)}</span>}
+                    <Users className="w-4 h-4 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <p className="font-medium text-sm truncate">{contact.name}</p>
-                      <span className="text-[11px] text-muted-foreground shrink-0">{contact.time}</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground truncate mt-0.5">{contact.lastMessage}</p>
+                    <p className="font-medium text-sm truncate">{room.name}</p>
+                    <p className="text-xs text-muted-foreground truncate mt-0.5">{room.type === 'group' ? 'مجموعة' : 'محادثة'}</p>
                   </div>
-                  {contact.unread > 0 && (
-                    <span className="w-5 h-5 rounded-full bg-accent text-accent-foreground text-[11px] flex items-center justify-center font-medium shrink-0">{contact.unread}</span>
-                  )}
                 </button>
               ))}
+              {rooms.length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">لا توجد محادثات</p>}
             </div>
             <div className="p-3 border-t">
-              <button className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-accent text-accent-foreground text-sm font-medium hover:opacity-90">
-                <Plus className="w-4 h-4" /> محادثة جديدة
-              </button>
+              {showNewRoom ? (
+                <div className="flex gap-2">
+                  <input value={newRoomName} onChange={e => setNewRoomName(e.target.value)} placeholder="اسم المحادثة..."
+                    className="flex-1 bg-muted/50 rounded-lg px-3 py-2 text-sm focus:outline-none" onKeyDown={e => e.key === 'Enter' && handleCreateRoom()} />
+                  <button onClick={handleCreateRoom} className="px-3 py-2 bg-accent text-accent-foreground rounded-lg text-sm font-medium">إنشاء</button>
+                  <button onClick={() => setShowNewRoom(false)} className="p-2 rounded-lg hover:bg-muted"><X className="w-4 h-4" /></button>
+                </div>
+              ) : (
+                <button onClick={() => setShowNewRoom(true)} className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-accent text-accent-foreground text-sm font-medium hover:opacity-90">
+                  <Plus className="w-4 h-4" /> محادثة جديدة
+                </button>
+              )}
             </div>
           </div>
 
           {/* Chat area */}
           <div className="flex-1 flex flex-col">
-            <div className="px-5 py-3 border-b flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
-                <span className="text-sm font-semibold text-primary">{selectedContact.name.charAt(0)}</span>
-              </div>
-              <div>
-                <p className="font-semibold text-sm">{selectedContact.name}</p>
-                <p className="text-xs text-muted-foreground">متصل الآن</p>
-              </div>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-5 space-y-4">
-              {messages.map(msg => (
-                <div key={msg.id} className={`flex ${msg.isMine ? 'justify-start' : 'justify-end'}`}>
-                  <div className={`max-w-[70%] rounded-2xl px-4 py-2.5 ${
-                    msg.isMine ? 'bg-accent text-accent-foreground rounded-br-md' : 'bg-muted rounded-bl-md'
-                  }`}>
-                    {!msg.isMine && <p className="text-xs font-medium mb-1 opacity-70">{msg.sender}</p>}
-                    <p className="text-sm">{msg.mention ? (
-                      <>
-                        <span className="text-info font-medium">@مدير_المشتريات</span> {msg.text.replace('@مدير_المشتريات ', '')}
-                      </>
-                    ) : msg.text}</p>
-                    <p className={`text-[11px] mt-1 ${msg.isMine ? 'opacity-70' : 'text-muted-foreground'}`}>{msg.time}</p>
+            {selectedRoom ? (
+              <>
+                <div className="px-5 py-3 border-b flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Users className="w-4 h-4 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm">{selectedRoom.name}</p>
+                    <p className="text-xs text-muted-foreground">{messages.length} رسالة</p>
                   </div>
                 </div>
-              ))}
-            </div>
 
-            <div className="p-4 border-t">
-              <div className="flex items-center gap-2">
-                <button className="p-2 rounded-lg hover:bg-muted"><Paperclip className="w-5 h-5 text-muted-foreground" /></button>
-                <button className="p-2 rounded-lg hover:bg-muted"><AtSign className="w-5 h-5 text-muted-foreground" /></button>
-                <input
-                  type="text"
-                  value={message}
-                  onChange={e => setMessage(e.target.value)}
-                  placeholder="اكتب رسالتك... استخدم @ للمنشن"
-                  className="flex-1 bg-muted/50 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-                />
-                <button className="p-2.5 rounded-lg bg-accent text-accent-foreground hover:opacity-90">
-                  <Send className="w-5 h-5" />
-                </button>
+                <div className="flex-1 overflow-y-auto p-5 space-y-4">
+                  {loading && <div className="flex justify-center"><Loader2 className="w-6 h-6 animate-spin text-muted-foreground" /></div>}
+                  {messages.map(msg => (
+                    <div key={msg.id} className={`flex ${msg.sender_id === user?.id ? 'justify-start' : 'justify-end'}`}>
+                      <div className={`max-w-[70%] rounded-2xl px-4 py-2.5 ${
+                        msg.sender_id === user?.id ? 'bg-accent text-accent-foreground rounded-br-md' : 'bg-muted rounded-bl-md'
+                      }`}>
+                        <p className="text-sm">{msg.content}</p>
+                        <p className={`text-[11px] mt-1 ${msg.sender_id === user?.id ? 'opacity-70' : 'text-muted-foreground'}`}>
+                          {new Date(msg.created_at).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                  <div ref={messagesEnd} />
+                </div>
+
+                <div className="p-4 border-t">
+                  <div className="flex items-center gap-2">
+                    <input type="text" value={message} onChange={e => setMessage(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && handleSend()}
+                      placeholder="اكتب رسالتك..."
+                      className="flex-1 bg-muted/50 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
+                    <button onClick={handleSend} className="p-2.5 rounded-lg bg-accent text-accent-foreground hover:opacity-90">
+                      <Send className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="flex-1 flex items-center justify-center text-muted-foreground">
+                <p>اختر محادثة أو أنشئ محادثة جديدة</p>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

@@ -23,6 +23,7 @@ import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
 import UsersManagement from "./pages/UsersManagement";
 import ERPNextSettings from "./pages/ERPNextSettings";
+import PermissionsMatrix from "./pages/PermissionsMatrix";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -65,6 +66,7 @@ const App = () => (
                       <Route path="/guide" element={<UserGuide />} />
                       <Route path="/settings/users" element={<UsersManagement />} />
                       <Route path="/settings/erpnext" element={<ERPNextSettings />} />
+                      <Route path="/settings/permissions" element={<PermissionsMatrix />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </AppLayout>

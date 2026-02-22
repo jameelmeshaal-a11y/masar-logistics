@@ -66,7 +66,8 @@ const navItems: NavItem[] = [
 
 const settingsItems = [
   { label: 'إدارة المستخدمين', path: '/settings/users' },
-  { label: 'إعدادات ERPNext', path: '/settings/erpnext' },
+  { label: 'مصفوفة الصلاحيات', path: '/settings/permissions' },
+  { label: 'إعدادات سلاسة', path: '/settings/erpnext' },
 ];
 
 const AppSidebar: React.FC<{ isOpen: boolean; onToggle: () => void }> = ({ isOpen, onToggle }) => {
