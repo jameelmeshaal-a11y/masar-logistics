@@ -12,7 +12,7 @@ const ERPNextSettings = () => {
 
   const handleSave = () => {
     saveERPNextConfig(config);
-    toast({ title: 'تم الحفظ', description: 'تم حفظ إعدادات ERPNext بنجاح' });
+    toast({ title: 'تم الحفظ', description: 'تم حفظ إعدادات سلاسة بنجاح' });
   };
 
   const handleTest = async () => {
@@ -23,7 +23,7 @@ const ERPNextSettings = () => {
     setTesting(false);
     toast({
       title: result ? 'متصل' : 'فشل الاتصال',
-      description: result ? 'تم الاتصال بسيرفر ERPNext بنجاح' : 'تعذر الاتصال، تحقق من البيانات',
+      description: result ? 'تم الاتصال بسيرفر سلاسة بنجاح' : 'تعذر الاتصال، تحقق من البيانات',
       variant: result ? 'default' : 'destructive',
     });
   };
@@ -31,8 +31,8 @@ const ERPNextSettings = () => {
   return (
     <div className="space-y-6">
       <div className="page-header">
-        <h1 className="page-title">إعدادات ERPNext</h1>
-        <p className="page-subtitle">ربط النظام مع Frappe ERPNext لمزامنة البيانات</p>
+        <h1 className="page-title">إعدادات سلاسة</h1>
+        <p className="page-subtitle">ربط النظام مع نظام سلاسة لمزامنة البيانات</p>
       </div>
 
       <div className="max-w-2xl space-y-6">
@@ -40,7 +40,7 @@ const ERPNextSettings = () => {
           <h2 className="text-lg font-bold font-heading">بيانات الاتصال</h2>
 
           <div>
-            <label className="block text-sm font-medium mb-1">رابط سيرفر ERPNext</label>
+            <label className="block text-sm font-medium mb-1">رابط سيرفر سلاسة</label>
             <input value={config.serverUrl} onChange={e => setConfig({ ...config, serverUrl: e.target.value })}
               placeholder="https://erp.example.com" dir="ltr"
               className="w-full border rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/20" />
