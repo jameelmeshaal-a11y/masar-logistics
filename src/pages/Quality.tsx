@@ -1,4 +1,8 @@
-import { Shield, CheckCircle2, XCircle, AlertTriangle, ClipboardCheck, Eye } from 'lucide-react';
+import { useState } from 'react';
+import { Shield, CheckCircle2, XCircle, AlertTriangle, ClipboardCheck, Plus } from 'lucide-react';
+import FormDialog, { FormField } from '@/components/FormDialog';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const inspections = [
   { id: 'QC-001', truck: 'SH-001', type: 'فحص استلام', inspector: 'أحمد المالكي', date: '2024-03-15', result: 'مطابق', items: 12, passed: 12 },
@@ -13,37 +17,47 @@ const vendorQuality = [
   { vendor: 'شركة الزيوت الوطنية', orders: 32, onTime: 30, qualityRate: 94, priceRate: 85 },
 ];
 
-const resultStyle = (r: string) => {
-  if (r === 'مطابق') return 'badge-active';
-  if (r === 'مطابق جزئياً') return 'badge-pending';
-  return 'badge-inactive';
-};
+const resultStyle = (r: string) => { if (r === 'مطابق') return 'badge-active'; if (r === 'مطابق جزئياً') return 'badge-pending'; return 'badge-inactive'; };
+
+const inspectionFields: FormField[] = [
+  { name: 'truck', label: 'الشاحنة', type: 'text', required: true, placeholder: 'SH-001' },
+  { name: 'type', label: 'نوع الفحص', type: 'select', required: true, options: [
+    { value: 'فحص استلام', label: 'فحص استلام' }, { value: 'فحص بعد الصيانة', label: 'فحص بعد الصيانة' },
+    { value: 'فحص دوري', label: 'فحص دوري' }, { value: 'فحص استلام مواد', label: 'فحص استلام مواد' },
+  ]},
+  { name: 'inspector', label: 'الفاحص', type: 'text', required: true },
+  { name: 'score', label: 'النتيجة (%)', type: 'number' },
+  { name: 'notes', label: 'ملاحظات', type: 'textarea' },
+];
 
 const Quality = () => {
+  const [showForm, setShowForm] = useState(false);
+  const { toast } = useToast();
+
+  const handleAdd = async (data: Record<string, string>) => {
+    const num = `QC-${Date.now().toString().slice(-6)}`;
+    const { error } = await supabase.from('quality_inspections').insert({
+      inspection_number: num, type: data.type, inspector: data.inspector,
+      score: data.score ? parseFloat(data.score) : null, notes: data.notes,
+    });
+    if (error) throw new Error(error.message);
+    toast({ title: 'تم', description: 'تم إضافة فحص الجودة بنجاح' });
+  };
+
   return (
     <div className="space-y-6">
-      <div className="page-header">
-        <h1 className="page-title">إدارة الجودة</h1>
-        <p className="page-subtitle">فحوصات الجودة وتقييم الموردين ومعايير الأداء</p>
+      <FormDialog open={showForm} onClose={() => setShowForm(false)} title="فحص جودة جديد" fields={inspectionFields} onSubmit={handleAdd} />
+
+      <div className="page-header flex items-center justify-between">
+        <div><h1 className="page-title">إدارة الجودة</h1><p className="page-subtitle">فحوصات الجودة وتقييم الموردين ومعايير الأداء</p></div>
+        <button onClick={() => setShowForm(true)} className="flex items-center gap-2 bg-accent text-accent-foreground px-4 py-2.5 rounded-lg text-sm font-medium hover:opacity-90"><Plus className="w-4 h-4" /> فحص جديد</button>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="stat-card">
-          <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center mb-3"><CheckCircle2 className="w-5 h-5 text-success" /></div>
-          <p className="text-2xl font-bold font-heading">91%</p><p className="text-sm text-muted-foreground">نسبة المطابقة</p>
-        </div>
-        <div className="stat-card">
-          <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center mb-3"><ClipboardCheck className="w-5 h-5 text-accent" /></div>
-          <p className="text-2xl font-bold font-heading">{inspections.length}</p><p className="text-sm text-muted-foreground">فحوصات هذا الشهر</p>
-        </div>
-        <div className="stat-card">
-          <div className="w-10 h-10 rounded-lg bg-warning/10 flex items-center justify-center mb-3"><AlertTriangle className="w-5 h-5 text-warning" /></div>
-          <p className="text-2xl font-bold font-heading">1</p><p className="text-sm text-muted-foreground">ملاحظات مفتوحة</p>
-        </div>
-        <div className="stat-card">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3"><Shield className="w-5 h-5 text-primary" /></div>
-          <p className="text-2xl font-bold font-heading">3</p><p className="text-sm text-muted-foreground">موردين مقيمين</p>
-        </div>
+        <div className="stat-card"><div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center mb-3"><CheckCircle2 className="w-5 h-5 text-success" /></div><p className="text-2xl font-bold font-heading">91%</p><p className="text-sm text-muted-foreground">نسبة المطابقة</p></div>
+        <div className="stat-card"><div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center mb-3"><ClipboardCheck className="w-5 h-5 text-accent" /></div><p className="text-2xl font-bold font-heading">{inspections.length}</p><p className="text-sm text-muted-foreground">فحوصات هذا الشهر</p></div>
+        <div className="stat-card"><div className="w-10 h-10 rounded-lg bg-warning/10 flex items-center justify-center mb-3"><AlertTriangle className="w-5 h-5 text-warning" /></div><p className="text-2xl font-bold font-heading">1</p><p className="text-sm text-muted-foreground">ملاحظات مفتوحة</p></div>
+        <div className="stat-card"><div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3"><Shield className="w-5 h-5 text-primary" /></div><p className="text-2xl font-bold font-heading">3</p><p className="text-sm text-muted-foreground">موردين مقيمين</p></div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -55,12 +69,8 @@ const Quality = () => {
               <tbody>
                 {inspections.map(i => (
                   <tr key={i.id}>
-                    <td className="font-medium text-primary">{i.id}</td>
-                    <td>{i.truck}</td>
-                    <td>{i.type}</td>
-                    <td>{i.inspector}</td>
-                    <td><span className={`badge-status ${resultStyle(i.result)}`}>{i.result}</span></td>
-                    <td>{i.passed}/{i.items}</td>
+                    <td className="font-medium text-primary">{i.id}</td><td>{i.truck}</td><td>{i.type}</td><td>{i.inspector}</td>
+                    <td><span className={`badge-status ${resultStyle(i.result)}`}>{i.result}</span></td><td>{i.passed}/{i.items}</td>
                   </tr>
                 ))}
               </tbody>
@@ -78,14 +88,14 @@ const Quality = () => {
                   <div>
                     <p className="text-muted-foreground text-xs">الالتزام بالتوريد</p>
                     <div className="flex items-center gap-2 mt-1">
-                      <div className="flex-1 h-2 rounded-full bg-muted"><div className="h-full rounded-full bg-success" style={{width: `${(v.onTime/v.orders)*100}%`}} /></div>
-                      <span className="text-xs font-medium">{Math.round((v.onTime/v.orders)*100)}%</span>
+                      <div className="flex-1 h-2 rounded-full bg-muted"><div className="h-full rounded-full bg-success" style={{ width: `${(v.onTime / v.orders) * 100}%` }} /></div>
+                      <span className="text-xs font-medium">{Math.round((v.onTime / v.orders) * 100)}%</span>
                     </div>
                   </div>
                   <div>
                     <p className="text-muted-foreground text-xs">جودة المنتجات</p>
                     <div className="flex items-center gap-2 mt-1">
-                      <div className="flex-1 h-2 rounded-full bg-muted"><div className="h-full rounded-full bg-info" style={{width: `${v.qualityRate}%`}} /></div>
+                      <div className="flex-1 h-2 rounded-full bg-muted"><div className="h-full rounded-full bg-info" style={{ width: `${v.qualityRate}%` }} /></div>
                       <span className="text-xs font-medium">{v.qualityRate}%</span>
                     </div>
                   </div>

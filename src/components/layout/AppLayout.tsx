@@ -3,8 +3,10 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, ShoppingCart, Truck, Wrench, Warehouse,
   Users, MapPin, Shield, DollarSign, BarChart3, MessageCircle,
-  BookOpen, ChevronDown, ChevronLeft, Menu, X, Bell, Search, LogOut, Settings
+  BookOpen, ChevronDown, Menu, X, Bell, Search, LogOut, Settings
 } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import ThemeSwitcher from '@/components/ThemeSwitcher';
 
 interface NavItem {
   label: string;
@@ -30,7 +32,6 @@ const navItems: NavItem[] = [
     children: [
       { label: 'الشاحنات', path: '/fleet/trucks' },
       { label: 'الكفرات', path: '/fleet/tires' },
-      { label: 'تعيين الشاحنات', path: '/fleet/assignments' },
     ]
   },
   { 
@@ -38,7 +39,6 @@ const navItems: NavItem[] = [
     children: [
       { label: 'أوامر العمل', path: '/maintenance/work-orders' },
       { label: 'الصيانة الدورية', path: '/maintenance/scheduled' },
-      { label: 'سجل الصيانة', path: '/maintenance/history' },
     ]
   },
   { 
@@ -46,7 +46,6 @@ const navItems: NavItem[] = [
     children: [
       { label: 'المخزون', path: '/warehouse/inventory' },
       { label: 'حركة المخزون', path: '/warehouse/movements' },
-      { label: 'الأصناف', path: '/warehouse/items' },
     ]
   },
   { label: 'السائقين', path: '/drivers', icon: Users },
@@ -57,7 +56,6 @@ const navItems: NavItem[] = [
     children: [
       { label: 'المدفوعات', path: '/finance/payments' },
       { label: 'الأرصدة', path: '/finance/balances' },
-      { label: 'السداد', path: '/finance/settlements' },
     ]
   },
   { label: 'التقارير', path: '/reports', icon: BarChart3 },
@@ -65,23 +63,26 @@ const navItems: NavItem[] = [
   { label: 'دليل الاستخدام', path: '/guide', icon: BookOpen },
 ];
 
+const settingsItems = [
+  { label: 'إدارة المستخدمين', path: '/settings/users' },
+  { label: 'إعدادات ERPNext', path: '/settings/erpnext' },
+];
+
 const AppSidebar: React.FC<{ isOpen: boolean; onToggle: () => void }> = ({ isOpen, onToggle }) => {
   const location = useLocation();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [showSettings, setShowSettings] = useState(false);
+  const { role } = useAuth();
 
   const toggleExpand = (path: string) => {
-    setExpandedItems(prev =>
-      prev.includes(path) ? prev.filter(p => p !== path) : [...prev, path]
-    );
+    setExpandedItems(prev => prev.includes(path) ? prev.filter(p => p !== path) : [...prev, path]);
   };
 
   const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(path + '/');
 
   return (
     <>
-      {isOpen && (
-        <div className="fixed inset-0 bg-foreground/20 z-40 lg:hidden" onClick={onToggle} />
-      )}
+      {isOpen && <div className="fixed inset-0 bg-foreground/20 z-40 lg:hidden" onClick={onToggle} />}
       <aside className={`fixed top-0 right-0 h-full bg-sidebar z-50 transition-all duration-300 flex flex-col
         ${isOpen ? 'w-64 translate-x-0' : 'w-64 translate-x-full lg:translate-x-0 lg:w-64'}`}>
         
@@ -103,10 +104,8 @@ const AppSidebar: React.FC<{ isOpen: boolean; onToggle: () => void }> = ({ isOpe
             <div key={item.path}>
               {item.children ? (
                 <>
-                  <button
-                    onClick={() => toggleExpand(item.path)}
-                    className={`sidebar-link w-full ${isActive(item.path) ? 'sidebar-link-active' : ''}`}
-                  >
+                  <button onClick={() => toggleExpand(item.path)}
+                    className={`sidebar-link w-full ${isActive(item.path) ? 'sidebar-link-active' : ''}`}>
                     <item.icon className="w-[18px] h-[18px] shrink-0" />
                     <span className="flex-1 text-right text-sm">{item.label}</span>
                     <ChevronDown className={`w-4 h-4 transition-transform ${expandedItems.includes(item.path) ? 'rotate-180' : ''}`} />
@@ -114,15 +113,9 @@ const AppSidebar: React.FC<{ isOpen: boolean; onToggle: () => void }> = ({ isOpe
                   {expandedItems.includes(item.path) && (
                     <div className="mr-7 mt-0.5 space-y-0.5">
                       {item.children.map(child => (
-                        <Link
-                          key={child.path}
-                          to={child.path}
+                        <Link key={child.path} to={child.path}
                           className={`block px-3 py-2 rounded-md text-sm transition-colors
-                            ${location.pathname === child.path 
-                              ? 'text-sidebar-primary bg-sidebar-accent font-medium' 
-                              : 'text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50'
-                            }`}
-                        >
+                            ${location.pathname === child.path ? 'text-sidebar-primary bg-sidebar-accent font-medium' : 'text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50'}`}>
                           {child.label}
                         </Link>
                       ))}
@@ -130,40 +123,65 @@ const AppSidebar: React.FC<{ isOpen: boolean; onToggle: () => void }> = ({ isOpe
                   )}
                 </>
               ) : (
-                <Link
-                  to={item.path}
-                  className={`sidebar-link ${isActive(item.path) && item.path === '/' ? location.pathname === '/' ? 'sidebar-link-active' : '' : isActive(item.path) ? 'sidebar-link-active' : ''}`}
-                >
+                <Link to={item.path}
+                  className={`sidebar-link ${isActive(item.path) && item.path === '/' ? location.pathname === '/' ? 'sidebar-link-active' : '' : isActive(item.path) ? 'sidebar-link-active' : ''}`}>
                   <item.icon className="w-[18px] h-[18px] shrink-0" />
                   <span className="text-sm">{item.label}</span>
                 </Link>
               )}
             </div>
           ))}
+
+          {/* Settings (admin only) */}
+          {role === 'admin' && (
+            <div>
+              <button onClick={() => setShowSettings(!showSettings)}
+                className={`sidebar-link w-full ${isActive('/settings') ? 'sidebar-link-active' : ''}`}>
+                <Settings className="w-[18px] h-[18px] shrink-0" />
+                <span className="flex-1 text-right text-sm">الإعدادات</span>
+                <ChevronDown className={`w-4 h-4 transition-transform ${showSettings ? 'rotate-180' : ''}`} />
+              </button>
+              {showSettings && (
+                <div className="mr-7 mt-0.5 space-y-0.5">
+                  {settingsItems.map(s => (
+                    <Link key={s.path} to={s.path}
+                      className={`block px-3 py-2 rounded-md text-sm transition-colors
+                        ${location.pathname === s.path ? 'text-sidebar-primary bg-sidebar-accent font-medium' : 'text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50'}`}>
+                      {s.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </nav>
 
         <div className="p-3 border-t border-sidebar-border">
-          <div className="flex items-center gap-3 px-3 py-2">
-            <div className="w-8 h-8 rounded-full bg-sidebar-accent flex items-center justify-center">
-              <span className="text-xs font-semibold text-sidebar-foreground">م</span>
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-medium text-sidebar-foreground">مدير النظام</p>
-              <p className="text-[11px] text-sidebar-muted">admin@logistics.sa</p>
-            </div>
-            <button className="text-sidebar-muted hover:text-sidebar-foreground">
-              <Settings className="w-4 h-4" />
-            </button>
-          </div>
+          <UserFooter />
         </div>
       </aside>
     </>
   );
 };
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
+const UserFooter = () => {
+  const { user, signOut } = useAuth();
+  return (
+    <div className="flex items-center gap-3 px-3 py-2">
+      <div className="w-8 h-8 rounded-full bg-sidebar-accent flex items-center justify-center">
+        <span className="text-xs font-semibold text-sidebar-foreground">{user?.email?.charAt(0)?.toUpperCase() || 'م'}</span>
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-sidebar-foreground truncate">{user?.email || 'مستخدم'}</p>
+      </div>
+      <button onClick={signOut} className="text-sidebar-muted hover:text-sidebar-foreground" title="تسجيل خروج">
+        <LogOut className="w-4 h-4" />
+      </button>
+    </div>
+  );
+};
+
+interface LayoutProps { children: React.ReactNode; }
 
 const AppLayout: React.FC<LayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -171,36 +189,27 @@ const AppLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen bg-background">
       <AppSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-      
       <div className="lg:mr-64">
-        {/* Top bar */}
         <header className="sticky top-0 z-30 bg-card/80 backdrop-blur-md border-b px-4 lg:px-6 py-3 flex items-center gap-4">
           <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-muted-foreground hover:text-foreground">
             <Menu className="w-5 h-5" />
           </button>
-          
           <div className="flex-1 max-w-md">
             <div className="relative">
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input 
-                type="text" 
-                placeholder="بحث في النظام..."
-                className="w-full bg-muted/50 border-0 rounded-lg pr-10 pl-4 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20"
-              />
+              <input type="text" placeholder="بحث في النظام..."
+                className="w-full bg-muted/50 border-0 rounded-lg pr-10 pl-4 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20" />
             </div>
           </div>
-
           <div className="flex items-center gap-2">
+            <ThemeSwitcher />
             <button className="relative p-2 rounded-lg text-muted-foreground hover:bg-muted transition-colors">
               <Bell className="w-5 h-5" />
               <span className="absolute top-1 left-1 w-2 h-2 bg-accent rounded-full" />
             </button>
           </div>
         </header>
-
-        <main className="p-4 lg:p-6 animate-fade-in">
-          {children}
-        </main>
+        <main className="p-4 lg:p-6 animate-fade-in">{children}</main>
       </div>
     </div>
   );

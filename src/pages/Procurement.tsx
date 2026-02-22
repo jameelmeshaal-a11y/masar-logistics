@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { Plus, Search, Filter, Download, Send, FileText, Eye, Edit, Trash2 } from 'lucide-react';
+import { Plus, Search, Filter, Download, Send, FileText, Eye, Edit } from 'lucide-react';
+import FormDialog, { FormField } from '@/components/FormDialog';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const tabs = ['طلبات الاحتياج', 'عروض الأسعار', 'أوامر الشراء', 'الموردين', 'الفواتير'];
 
@@ -35,51 +38,88 @@ const statusStyle = (s: string) => {
   return 'badge-inactive';
 };
 
+const reqFields: FormField[] = [
+  { name: 'department', label: 'القسم', type: 'select', required: true, options: [
+    { value: 'التشغيل', label: 'التشغيل' }, { value: 'الصيانة', label: 'الصيانة' }, { value: 'الإدارة', label: 'الإدارة' },
+  ]},
+  { name: 'item_name', label: 'الصنف', type: 'text', required: true, placeholder: 'اسم الصنف المطلوب' },
+  { name: 'quantity', label: 'الكمية', type: 'number', required: true, placeholder: '1' },
+  { name: 'notes', label: 'ملاحظات', type: 'textarea', placeholder: 'ملاحظات إضافية...' },
+];
+
+const vendorFields: FormField[] = [
+  { name: 'name', label: 'اسم المورد', type: 'text', required: true },
+  { name: 'tax_number', label: 'الرقم الضريبي', type: 'text', dir: 'ltr' },
+  { name: 'phone', label: 'الهاتف', type: 'tel', dir: 'ltr' },
+  { name: 'email', label: 'البريد الإلكتروني', type: 'email', dir: 'ltr' },
+  { name: 'address', label: 'العنوان', type: 'text' },
+];
+
 const Procurement = () => {
   const [activeTab, setActiveTab] = useState(0);
+  const [showReqForm, setShowReqForm] = useState(false);
+  const [showVendorForm, setShowVendorForm] = useState(false);
+  const { toast } = useToast();
+
+  const handleAddReq = async (data: Record<string, string>) => {
+    const { data: user } = await supabase.auth.getUser();
+    const reqNum = `REQ-${Date.now().toString().slice(-6)}`;
+    const { error } = await supabase.from('requisitions').insert({
+      req_number: reqNum, department: data.department, item_name: data.item_name,
+      quantity: parseInt(data.quantity) || 1, notes: data.notes, requested_by: user.user?.id,
+    });
+    if (error) throw new Error(error.message);
+    toast({ title: 'تم', description: 'تم إضافة طلب الاحتياج بنجاح' });
+  };
+
+  const handleAddVendor = async (data: Record<string, string>) => {
+    const { error } = await supabase.from('vendors').insert({
+      name: data.name, tax_number: data.tax_number, phone: data.phone, email: data.email, address: data.address,
+    });
+    if (error) throw new Error(error.message);
+    toast({ title: 'تم', description: 'تم إضافة المورد بنجاح' });
+  };
+
+  const handleAdd = () => {
+    if (activeTab === 0) setShowReqForm(true);
+    else if (activeTab === 3) setShowVendorForm(true);
+    else toast({ title: 'قريباً', description: 'سيتم تفعيل هذه الميزة قريباً' });
+  };
 
   return (
     <div className="space-y-6">
+      <FormDialog open={showReqForm} onClose={() => setShowReqForm(false)} title="إضافة طلب احتياج" fields={reqFields} onSubmit={handleAddReq} />
+      <FormDialog open={showVendorForm} onClose={() => setShowVendorForm(false)} title="إضافة مورد جديد" fields={vendorFields} onSubmit={handleAddVendor} />
+
       <div className="page-header flex items-center justify-between">
         <div>
           <h1 className="page-title">إدارة المشتريات</h1>
           <p className="page-subtitle">إدارة كاملة لدورة المشتريات من الاحتياج حتى السداد</p>
         </div>
-        <button className="flex items-center gap-2 bg-accent text-accent-foreground px-4 py-2.5 rounded-lg text-sm font-medium hover:opacity-90 transition-opacity">
-          <Plus className="w-4 h-4" />
-          إضافة جديد
+        <button onClick={handleAdd} className="flex items-center gap-2 bg-accent text-accent-foreground px-4 py-2.5 rounded-lg text-sm font-medium hover:opacity-90 transition-opacity">
+          <Plus className="w-4 h-4" /> إضافة جديد
         </button>
       </div>
 
-      {/* Tabs */}
       <div className="flex gap-1 bg-muted/50 p-1 rounded-xl overflow-x-auto">
         {tabs.map((tab, i) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(i)}
+          <button key={tab} onClick={() => setActiveTab(i)}
             className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all
-              ${activeTab === i ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
-          >
+              ${activeTab === i ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
             {tab}
           </button>
         ))}
       </div>
 
-      {/* Search/Filter bar */}
       <div className="flex items-center gap-3 flex-wrap">
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input type="text" placeholder="بحث..." className="w-full bg-card border rounded-lg pr-10 pl-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" />
         </div>
-        <button className="flex items-center gap-2 px-3 py-2 border rounded-lg text-sm text-muted-foreground hover:bg-muted transition-colors">
-          <Filter className="w-4 h-4" /> تصفية
-        </button>
-        <button className="flex items-center gap-2 px-3 py-2 border rounded-lg text-sm text-muted-foreground hover:bg-muted transition-colors">
-          <Download className="w-4 h-4" /> تصدير
-        </button>
+        <button className="flex items-center gap-2 px-3 py-2 border rounded-lg text-sm text-muted-foreground hover:bg-muted transition-colors"><Filter className="w-4 h-4" /> تصفية</button>
+        <button className="flex items-center gap-2 px-3 py-2 border rounded-lg text-sm text-muted-foreground hover:bg-muted transition-colors"><Download className="w-4 h-4" /> تصدير</button>
       </div>
 
-      {/* Tables */}
       <div className="bg-card rounded-xl border overflow-hidden">
         {activeTab === 0 && (
           <div className="overflow-x-auto">
@@ -88,35 +128,23 @@ const Procurement = () => {
               <tbody>
                 {requisitions.map(r => (
                   <tr key={r.id}>
-                    <td className="font-medium text-primary">{r.id}</td>
-                    <td>{r.department}</td>
-                    <td>{r.item}</td>
-                    <td>{r.qty}</td>
-                    <td>{r.requester}</td>
-                    <td className="text-muted-foreground">{r.date}</td>
+                    <td className="font-medium text-primary">{r.id}</td><td>{r.department}</td><td>{r.item}</td><td>{r.qty}</td>
+                    <td>{r.requester}</td><td className="text-muted-foreground">{r.date}</td>
                     <td><span className={`badge-status ${statusStyle(r.status)}`}>{r.status}</span></td>
-                    <td>
-                      <div className="flex items-center gap-1">
-                        <button className="p-1.5 rounded-md hover:bg-muted"><Eye className="w-4 h-4 text-muted-foreground" /></button>
-                        <button className="p-1.5 rounded-md hover:bg-muted"><Edit className="w-4 h-4 text-muted-foreground" /></button>
-                      </div>
-                    </td>
+                    <td><div className="flex items-center gap-1"><button className="p-1.5 rounded-md hover:bg-muted"><Eye className="w-4 h-4 text-muted-foreground" /></button><button className="p-1.5 rounded-md hover:bg-muted"><Edit className="w-4 h-4 text-muted-foreground" /></button></div></td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         )}
-
         {activeTab === 1 && (
           <div className="p-8 text-center text-muted-foreground">
-            <FileText className="w-12 h-12 mx-auto mb-3 opacity-30" />
-            <p className="font-medium">عروض الأسعار</p>
+            <FileText className="w-12 h-12 mx-auto mb-3 opacity-30" /><p className="font-medium">عروض الأسعار</p>
             <p className="text-sm mt-1">إرسال طلبات عروض أسعار للموردين ومقارنة العروض</p>
             <button className="mt-4 px-4 py-2 bg-accent text-accent-foreground rounded-lg text-sm font-medium">إنشاء طلب عرض سعر</button>
           </div>
         )}
-
         {activeTab === 2 && (
           <div className="overflow-x-auto">
             <table className="data-table">
@@ -124,25 +152,15 @@ const Procurement = () => {
               <tbody>
                 {purchaseOrders.map(po => (
                   <tr key={po.id}>
-                    <td className="font-medium text-primary">{po.id}</td>
-                    <td>{po.vendor}</td>
-                    <td>{po.items}</td>
-                    <td>{po.total}</td>
-                    <td className="text-muted-foreground">{po.date}</td>
-                    <td><span className={`badge-status ${statusStyle(po.status)}`}>{po.status}</span></td>
-                    <td>
-                      <div className="flex items-center gap-1">
-                        <button className="p-1.5 rounded-md hover:bg-muted"><Eye className="w-4 h-4 text-muted-foreground" /></button>
-                        <button className="p-1.5 rounded-md hover:bg-muted"><Send className="w-4 h-4 text-muted-foreground" /></button>
-                      </div>
-                    </td>
+                    <td className="font-medium text-primary">{po.id}</td><td>{po.vendor}</td><td>{po.items}</td><td>{po.total}</td>
+                    <td className="text-muted-foreground">{po.date}</td><td><span className={`badge-status ${statusStyle(po.status)}`}>{po.status}</span></td>
+                    <td><div className="flex items-center gap-1"><button className="p-1.5 rounded-md hover:bg-muted"><Eye className="w-4 h-4 text-muted-foreground" /></button><button className="p-1.5 rounded-md hover:bg-muted"><Send className="w-4 h-4 text-muted-foreground" /></button></div></td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         )}
-
         {activeTab === 3 && (
           <div className="overflow-x-auto">
             <table className="data-table">
@@ -150,30 +168,16 @@ const Procurement = () => {
               <tbody>
                 {vendors.map(v => (
                   <tr key={v.id}>
-                    <td className="font-medium">{v.id}</td>
-                    <td className="font-medium text-primary">{v.name}</td>
-                    <td className="text-muted-foreground text-xs">{v.tax}</td>
-                    <td>{v.phone}</td>
-                    <td>{v.orders}</td>
-                    <td>
-                      <div className="flex items-center gap-1">
-                        <span className="text-warning">★</span>
-                        <span className="text-sm">{v.rating}</span>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="flex items-center gap-1">
-                        <button className="p-1.5 rounded-md hover:bg-muted"><Eye className="w-4 h-4 text-muted-foreground" /></button>
-                        <button className="p-1.5 rounded-md hover:bg-muted"><Edit className="w-4 h-4 text-muted-foreground" /></button>
-                      </div>
-                    </td>
+                    <td className="font-medium">{v.id}</td><td className="font-medium text-primary">{v.name}</td>
+                    <td className="text-muted-foreground text-xs">{v.tax}</td><td>{v.phone}</td><td>{v.orders}</td>
+                    <td><div className="flex items-center gap-1"><span className="text-warning">★</span><span className="text-sm">{v.rating}</span></div></td>
+                    <td><div className="flex items-center gap-1"><button className="p-1.5 rounded-md hover:bg-muted"><Eye className="w-4 h-4 text-muted-foreground" /></button><button className="p-1.5 rounded-md hover:bg-muted"><Edit className="w-4 h-4 text-muted-foreground" /></button></div></td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         )}
-
         {activeTab === 4 && (
           <div className="overflow-x-auto">
             <table className="data-table">
@@ -181,19 +185,10 @@ const Procurement = () => {
               <tbody>
                 {invoices.map(inv => (
                   <tr key={inv.id}>
-                    <td className="font-medium text-primary">{inv.id}</td>
-                    <td>{inv.vendor}</td>
-                    <td>{inv.amount}</td>
-                    <td>{inv.vat}</td>
-                    <td className="font-semibold">{inv.total}</td>
-                    <td className="text-muted-foreground">{inv.date}</td>
+                    <td className="font-medium text-primary">{inv.id}</td><td>{inv.vendor}</td><td>{inv.amount}</td><td>{inv.vat}</td>
+                    <td className="font-semibold">{inv.total}</td><td className="text-muted-foreground">{inv.date}</td>
                     <td><span className={`badge-status ${statusStyle(inv.status)}`}>{inv.status}</span></td>
-                    <td>
-                      <div className="flex items-center gap-1">
-                        <button className="p-1.5 rounded-md hover:bg-muted"><Eye className="w-4 h-4 text-muted-foreground" /></button>
-                        <button className="p-1.5 rounded-md hover:bg-muted"><Send className="w-4 h-4 text-muted-foreground" /></button>
-                      </div>
-                    </td>
+                    <td><div className="flex items-center gap-1"><button className="p-1.5 rounded-md hover:bg-muted"><Eye className="w-4 h-4 text-muted-foreground" /></button><button className="p-1.5 rounded-md hover:bg-muted"><Send className="w-4 h-4 text-muted-foreground" /></button></div></td>
                   </tr>
                 ))}
               </tbody>

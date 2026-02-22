@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import { DollarSign, TrendingUp, TrendingDown, CreditCard, Wallet, Eye, Download, Send } from 'lucide-react';
+import { DollarSign, TrendingUp, TrendingDown, CreditCard, Wallet, Eye, Send, Plus } from 'lucide-react';
+import FormDialog, { FormField } from '@/components/FormDialog';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const payments = [
   { id: 'PAY-001', vendor: 'شركة الإطارات المتقدمة', invoice: 'INV-001', amount: '51,750', method: 'تحويل بنكي', date: '2024-03-15', status: 'مكتمل' },
@@ -15,33 +18,43 @@ const balances = [
 
 const statusStyle = (s: string) => s === 'مكتمل' ? 'badge-active' : 'badge-pending';
 
+const paymentFields: FormField[] = [
+  { name: 'vendor', label: 'المورد', type: 'text', required: true },
+  { name: 'invoice', label: 'رقم الفاتورة', type: 'text' },
+  { name: 'amount', label: 'المبلغ (ر.س)', type: 'number', required: true },
+  { name: 'method', label: 'طريقة الدفع', type: 'select', required: true, options: [
+    { value: 'bank_transfer', label: 'تحويل بنكي' }, { value: 'check', label: 'شيك' }, { value: 'cash', label: 'نقدي' },
+  ]},
+];
+
 const Finance = () => {
   const [tab, setTab] = useState<'payments' | 'balances'>('payments');
+  const [showForm, setShowForm] = useState(false);
+  const { toast } = useToast();
+
+  const handleAdd = async (data: Record<string, string>) => {
+    const payNum = `PAY-${Date.now().toString().slice(-6)}`;
+    const { error } = await supabase.from('payments').insert({
+      payment_number: payNum, amount: parseFloat(data.amount), method: data.method,
+    });
+    if (error) throw new Error(error.message);
+    toast({ title: 'تم', description: 'تم تسجيل الدفعة بنجاح' });
+  };
 
   return (
     <div className="space-y-6">
-      <div className="page-header">
-        <h1 className="page-title">الإدارة المالية</h1>
-        <p className="page-subtitle">المدفوعات والأرصدة والسداد وتتبع الالتزامات</p>
+      <FormDialog open={showForm} onClose={() => setShowForm(false)} title="تسجيل دفعة جديدة" fields={paymentFields} onSubmit={handleAdd} />
+
+      <div className="page-header flex items-center justify-between">
+        <div><h1 className="page-title">الإدارة المالية</h1><p className="page-subtitle">المدفوعات والأرصدة والسداد وتتبع الالتزامات</p></div>
+        <button onClick={() => setShowForm(true)} className="flex items-center gap-2 bg-accent text-accent-foreground px-4 py-2.5 rounded-lg text-sm font-medium hover:opacity-90"><Plus className="w-4 h-4" /> تسجيل دفعة</button>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="stat-card">
-          <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center mb-3"><TrendingUp className="w-5 h-5 text-success" /></div>
-          <p className="text-2xl font-bold font-heading">155,865</p><p className="text-sm text-muted-foreground">إجمالي المدفوعات (ر.س)</p>
-        </div>
-        <div className="stat-card">
-          <div className="w-10 h-10 rounded-lg bg-warning/10 flex items-center justify-center mb-3"><Wallet className="w-5 h-5 text-warning" /></div>
-          <p className="text-2xl font-bold font-heading">44,135</p><p className="text-sm text-muted-foreground">المستحقات المتبقية (ر.س)</p>
-        </div>
-        <div className="stat-card">
-          <div className="w-10 h-10 rounded-lg bg-destructive/10 flex items-center justify-center mb-3"><TrendingDown className="w-5 h-5 text-destructive" /></div>
-          <p className="text-2xl font-bold font-heading">1</p><p className="text-sm text-muted-foreground">مدفوعات متأخرة</p>
-        </div>
-        <div className="stat-card">
-          <div className="w-10 h-10 rounded-lg bg-info/10 flex items-center justify-center mb-3"><CreditCard className="w-5 h-5 text-info" /></div>
-          <p className="text-2xl font-bold font-heading">3</p><p className="text-sm text-muted-foreground">موردين نشطين</p>
-        </div>
+        <div className="stat-card"><div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center mb-3"><TrendingUp className="w-5 h-5 text-success" /></div><p className="text-2xl font-bold font-heading">155,865</p><p className="text-sm text-muted-foreground">إجمالي المدفوعات (ر.س)</p></div>
+        <div className="stat-card"><div className="w-10 h-10 rounded-lg bg-warning/10 flex items-center justify-center mb-3"><Wallet className="w-5 h-5 text-warning" /></div><p className="text-2xl font-bold font-heading">44,135</p><p className="text-sm text-muted-foreground">المستحقات المتبقية (ر.س)</p></div>
+        <div className="stat-card"><div className="w-10 h-10 rounded-lg bg-destructive/10 flex items-center justify-center mb-3"><TrendingDown className="w-5 h-5 text-destructive" /></div><p className="text-2xl font-bold font-heading">1</p><p className="text-sm text-muted-foreground">مدفوعات متأخرة</p></div>
+        <div className="stat-card"><div className="w-10 h-10 rounded-lg bg-info/10 flex items-center justify-center mb-3"><CreditCard className="w-5 h-5 text-info" /></div><p className="text-2xl font-bold font-heading">3</p><p className="text-sm text-muted-foreground">موردين نشطين</p></div>
       </div>
 
       <div className="flex gap-1 bg-muted/50 p-1 rounded-xl w-fit">
@@ -57,19 +70,10 @@ const Finance = () => {
               <tbody>
                 {payments.map(p => (
                   <tr key={p.id}>
-                    <td className="font-medium text-primary">{p.id}</td>
-                    <td>{p.vendor}</td>
-                    <td>{p.invoice}</td>
-                    <td className="font-semibold">{p.amount}</td>
-                    <td>{p.method}</td>
-                    <td className="text-muted-foreground">{p.date}</td>
+                    <td className="font-medium text-primary">{p.id}</td><td>{p.vendor}</td><td>{p.invoice}</td>
+                    <td className="font-semibold">{p.amount}</td><td>{p.method}</td><td className="text-muted-foreground">{p.date}</td>
                     <td><span className={`badge-status ${statusStyle(p.status)}`}>{p.status}</span></td>
-                    <td>
-                      <div className="flex items-center gap-1">
-                        <button className="p-1.5 rounded-md hover:bg-muted"><Eye className="w-4 h-4 text-muted-foreground" /></button>
-                        <button className="p-1.5 rounded-md hover:bg-muted"><Send className="w-4 h-4 text-muted-foreground" /></button>
-                      </div>
-                    </td>
+                    <td><div className="flex items-center gap-1"><button className="p-1.5 rounded-md hover:bg-muted"><Eye className="w-4 h-4 text-muted-foreground" /></button><button className="p-1.5 rounded-md hover:bg-muted"><Send className="w-4 h-4 text-muted-foreground" /></button></div></td>
                   </tr>
                 ))}
               </tbody>
@@ -78,20 +82,14 @@ const Finance = () => {
         ) : (
           <div className="overflow-x-auto">
             <table className="data-table">
-              <thead><tr><th>المورد</th><th>إجمالي المستحقات</th><th>المدفوع</th><th>المتبقي</th><th>تاريخ الاستحقاق</th><th>الحالة</th></tr></thead>
+              <thead><tr><th>المورد</th><th>إجمالي المستحقات</th><th>المدفوع</th><th>المتبقي</th><th>تاريخ الاستحقاق</th><th>التقدم</th></tr></thead>
               <tbody>
                 {balances.map((b, i) => (
                   <tr key={i}>
-                    <td className="font-medium">{b.vendor}</td>
-                    <td>{b.total} ر.س</td>
-                    <td className="text-success">{b.paid} ر.س</td>
-                    <td className="font-semibold text-destructive">{b.remaining} ر.س</td>
+                    <td className="font-medium">{b.vendor}</td><td>{b.total} ر.س</td>
+                    <td className="text-success">{b.paid} ر.س</td><td className="font-semibold text-destructive">{b.remaining} ر.س</td>
                     <td>{b.dueDate}</td>
-                    <td>
-                      <div className="w-full h-2 rounded-full bg-muted">
-                        <div className="h-full rounded-full bg-success" style={{width: `${(parseInt(b.paid.replace(',','')) / parseInt(b.total.replace(',',''))) * 100}%`}} />
-                      </div>
-                    </td>
+                    <td><div className="w-full h-2 rounded-full bg-muted"><div className="h-full rounded-full bg-success" style={{ width: `${(parseInt(b.paid.replace(',', '')) / parseInt(b.total.replace(',', ''))) * 100}%` }} /></div></td>
                   </tr>
                 ))}
               </tbody>
