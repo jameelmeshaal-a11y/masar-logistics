@@ -251,6 +251,80 @@ export type Database = {
           },
         ]
       }
+      maintenance_tickets: {
+        Row: {
+          actual_cost: number | null
+          assigned_to: string | null
+          created_at: string
+          equipment_id: string | null
+          equipment_location: string
+          equipment_number: string
+          equipment_type: string
+          estimated_cost: number | null
+          id: string
+          issue_category: string
+          issue_description: string
+          photos_urls: string[] | null
+          priority: string
+          reported_by: string | null
+          resolution_notes: string | null
+          resolved_at: string | null
+          status: string
+          ticket_number: string
+          updated_at: string
+        }
+        Insert: {
+          actual_cost?: number | null
+          assigned_to?: string | null
+          created_at?: string
+          equipment_id?: string | null
+          equipment_location: string
+          equipment_number: string
+          equipment_type?: string
+          estimated_cost?: number | null
+          id?: string
+          issue_category?: string
+          issue_description: string
+          photos_urls?: string[] | null
+          priority?: string
+          reported_by?: string | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          status?: string
+          ticket_number: string
+          updated_at?: string
+        }
+        Update: {
+          actual_cost?: number | null
+          assigned_to?: string | null
+          created_at?: string
+          equipment_id?: string | null
+          equipment_location?: string
+          equipment_number?: string
+          equipment_type?: string
+          estimated_cost?: number | null
+          id?: string
+          issue_category?: string
+          issue_description?: string
+          photos_urls?: string[] | null
+          priority?: string
+          reported_by?: string | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          status?: string
+          ticket_number?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_ticket_truck"
+            columns: ["equipment_id"]
+            isOneToOne: false
+            referencedRelation: "trucks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payments: {
         Row: {
           amount: number

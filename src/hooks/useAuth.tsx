@@ -27,8 +27,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        const r = await getUserRole(session.user.id);
-        setRole(r);
+        try {
+          const r = await getUserRole(session.user.id);
+          setRole(r);
+        } catch {
+          setRole(null);
+        }
       } else {
         setRole(null);
       }
@@ -39,11 +43,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        const r = await getUserRole(session.user.id);
-        setRole(r);
+        try {
+          const r = await getUserRole(session.user.id);
+          setRole(r);
+        } catch {
+          setRole(null);
+        }
       }
       setLoading(false);
-    });
+    }).catch(() => setLoading(false));
 
     return () => subscription.unsubscribe();
   }, []);
