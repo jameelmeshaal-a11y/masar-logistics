@@ -25,49 +25,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     let mounted = true;
 
-    const initAuth = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!mounted) return;
-        setSession(session);
-        setUser(session?.user ?? null);
-        if (session?.user) {
+    // Set up auth state listener - it fires immediately with current session
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!mounted) return;
+      setSession(session);
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        // Use setTimeout to avoid Supabase SDK deadlock
+        setTimeout(async () => {
+          if (!mounted) return;
           try {
             const r = await getUserRole(session.user.id);
             if (mounted) setRole(r);
           } catch {
             if (mounted) setRole(null);
           }
-        }
-      } catch {
-        // ignore
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
-
-    initAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (!mounted) return;
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        try {
-          const r = await getUserRole(session.user.id);
-          if (mounted) setRole(r);
-        } catch {
-          if (mounted) setRole(null);
-        }
+          if (mounted) setLoading(false);
+        }, 0);
       } else {
         setRole(null);
+        setLoading(false);
       }
-      setLoading(false);
     });
+
+    // Fallback: ensure loading becomes false after 3 seconds max
+    const timeout = setTimeout(() => {
+      if (mounted) setLoading(false);
+    }, 3000);
 
     return () => {
       mounted = false;
       subscription.unsubscribe();
+      clearTimeout(timeout);
     };
   }, []);
 
