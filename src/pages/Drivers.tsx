@@ -1,4 +1,8 @@
-import { Plus, Search, Phone, Truck, Calendar, Eye, Edit, FileText } from 'lucide-react';
+import { useState } from 'react';
+import { Plus, Search, Phone, Truck, Calendar, Edit } from 'lucide-react';
+import FormDialog, { FormField } from '@/components/FormDialog';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const drivers = [
   { id: 'DRV-001', name: 'محمد أحمد الغامدي', idNumber: '1098765432', license: 'رخصة نقل ثقيل', licenseExpiry: '2025-06-15', phone: '0551234567', truck: 'SH-001', status: 'نشط', totalKm: '45,200', trips: 128 },
@@ -8,24 +12,36 @@ const drivers = [
   { id: 'DRV-005', name: 'عبدالله فهد الشهري', idNumber: '1054321098', license: 'رخصة نقل ثقيل', licenseExpiry: '2025-01-28', phone: '0557778899', truck: '-', status: 'غير معين', totalKm: '15,300', trips: 45 },
 ];
 
-const statusStyle = (s: string) => {
-  if (s === 'نشط') return 'badge-active';
-  if (s === 'في إجازة') return 'badge-pending';
-  return 'badge-inactive';
-};
+const statusStyle = (s: string) => { if (s === 'نشط') return 'badge-active'; if (s === 'في إجازة') return 'badge-pending'; return 'badge-inactive'; };
+
+const driverFields: FormField[] = [
+  { name: 'name', label: 'الاسم الكامل', type: 'text', required: true },
+  { name: 'id_number', label: 'رقم الهوية', type: 'text', required: true, dir: 'ltr' },
+  { name: 'license_number', label: 'رقم الرخصة', type: 'text', dir: 'ltr' },
+  { name: 'license_expiry', label: 'تاريخ انتهاء الرخصة', type: 'date' },
+  { name: 'phone', label: 'رقم الجوال', type: 'tel', required: true, dir: 'ltr' },
+];
 
 const Drivers = () => {
+  const [showForm, setShowForm] = useState(false);
+  const { toast } = useToast();
+
+  const handleAdd = async (data: Record<string, string>) => {
+    const { error } = await supabase.from('drivers').insert({
+      name: data.name, id_number: data.id_number, license_number: data.license_number,
+      license_expiry: data.license_expiry || null, phone: data.phone,
+    });
+    if (error) throw new Error(error.message);
+    toast({ title: 'تم', description: 'تم إضافة السائق بنجاح' });
+  };
+
   return (
     <div className="space-y-6">
+      <FormDialog open={showForm} onClose={() => setShowForm(false)} title="إضافة سائق جديد" fields={driverFields} onSubmit={handleAdd} />
+
       <div className="page-header flex items-center justify-between">
-        <div>
-          <h1 className="page-title">إدارة السائقين</h1>
-          <p className="page-subtitle">بيانات السائقين وربطهم بالشاحنات وتتبع الأداء</p>
-        </div>
-        <button className="flex items-center gap-2 bg-accent text-accent-foreground px-4 py-2.5 rounded-lg text-sm font-medium hover:opacity-90">
-          <Plus className="w-4 h-4" />
-          إضافة سائق
-        </button>
+        <div><h1 className="page-title">إدارة السائقين</h1><p className="page-subtitle">بيانات السائقين وربطهم بالشاحنات وتتبع الأداء</p></div>
+        <button onClick={() => setShowForm(true)} className="flex items-center gap-2 bg-accent text-accent-foreground px-4 py-2.5 rounded-lg text-sm font-medium hover:opacity-90"><Plus className="w-4 h-4" /> إضافة سائق</button>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -50,14 +66,10 @@ const Drivers = () => {
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                   <span className="font-bold text-primary font-heading">{driver.name.charAt(0)}</span>
                 </div>
-                <div>
-                  <p className="font-semibold text-sm">{driver.name}</p>
-                  <p className="text-xs text-muted-foreground">{driver.id} | {driver.idNumber}</p>
-                </div>
+                <div><p className="font-semibold text-sm">{driver.name}</p><p className="text-xs text-muted-foreground">{driver.id} | {driver.idNumber}</p></div>
               </div>
               <span className={`badge-status ${statusStyle(driver.status)}`}>{driver.status}</span>
             </div>
-
             <div className="space-y-2 text-sm">
               <div className="flex justify-between"><span className="text-muted-foreground flex items-center gap-1.5"><Phone className="w-3.5 h-3.5" /> الجوال</span><span>{driver.phone}</span></div>
               <div className="flex justify-between"><span className="text-muted-foreground flex items-center gap-1.5"><Truck className="w-3.5 h-3.5" /> الشاحنة</span><span className="font-medium">{driver.truck}</span></div>
@@ -65,7 +77,6 @@ const Drivers = () => {
               <div className="flex justify-between"><span className="text-muted-foreground">الكيلومترات</span><span>{driver.totalKm} كم</span></div>
               <div className="flex justify-between"><span className="text-muted-foreground">الرحلات</span><span>{driver.trips}</span></div>
             </div>
-
             <div className="flex items-center gap-2 mt-4 pt-3 border-t">
               <button className="flex-1 py-2 text-sm rounded-lg bg-muted hover:bg-muted/80 transition-colors font-medium">عرض الملف</button>
               <button className="p-2 rounded-lg bg-muted hover:bg-muted/80"><Edit className="w-4 h-4 text-muted-foreground" /></button>
