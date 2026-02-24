@@ -39,13 +39,13 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const root = document.documentElement;
-    // Remove all theme classes
-    const allThemeClasses = Object.keys(themes).map(k => `theme-${k}`);
-    root.classList.remove(...allThemeClasses, 'dark');
+    // Use data-theme attribute for reliable theme switching
+    root.setAttribute('data-theme', theme);
+    // Handle dark mode class
     if (theme === 'midnight') {
-      root.classList.add('dark', 'theme-midnight');
+      root.classList.add('dark');
     } else {
-      root.classList.add(`theme-${theme}`);
+      root.classList.remove('dark');
     }
   }, [theme]);
 
