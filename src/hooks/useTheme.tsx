@@ -1,24 +1,35 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-export type ThemeKey = 'classic' | 'ocean' | 'desert' | 'dark';
+export type ThemeKey = 
+  | 'elegant-rose' | 'royal-purple' | 'air-blue' | 'ocean-blue'
+  | 'ocean-calm' | 'forest-green' | 'warm-sunset' | 'lavender-dream'
+  | 'midnight' | 'royal-gold' | 'crimson-red' | 'classic';
 
 interface ThemeContextType {
   theme: ThemeKey;
   setTheme: (t: ThemeKey) => void;
 }
 
-const ThemeContext = createContext<ThemeContextType>({ theme: 'classic', setTheme: () => {} });
+const ThemeContext = createContext<ThemeContextType>({ theme: 'ocean-blue', setTheme: () => {} });
 
-export const themes: Record<ThemeKey, { label: string; icon: string }> = {
-  classic: { label: 'كلاسيكي', icon: '🎨' },
-  ocean: { label: 'محيطي', icon: '🌊' },
-  desert: { label: 'صحراوي', icon: '🏜️' },
-  dark: { label: 'داكن', icon: '🌙' },
+export const themes: Record<ThemeKey, { label: string; icon: string; color: string }> = {
+  'elegant-rose': { label: 'العدالة الأنيقة', icon: '🌸', color: '#E8A0BF' },
+  'royal-purple': { label: 'البنفسجي الملكي', icon: '💜', color: '#7B2FF7' },
+  'air-blue': { label: 'القانوني الهوائي', icon: '🩵', color: '#87CEEB' },
+  'ocean-blue': { label: 'الأزرق الهوائي', icon: '✓', color: '#4A90D9' },
+  'ocean-calm': { label: 'هدوء المحيط', icon: '🌊', color: '#2C7A8C' },
+  'forest-green': { label: 'أخضر الغابة', icon: '🌲', color: '#2D6A4F' },
+  'warm-sunset': { label: 'غروب دافئ', icon: '🌅', color: '#E07A5F' },
+  'lavender-dream': { label: 'حلم اللافندر', icon: '💐', color: '#9B8EC5' },
+  'midnight': { label: 'وضع منتصف الليل', icon: '🌙', color: '#1A1A2E' },
+  'royal-gold': { label: 'الذهبي الملكي', icon: '👑', color: '#C5A43E' },
+  'crimson-red': { label: 'الأحمر القرمزي', icon: '🔴', color: '#DC3545' },
+  'classic': { label: 'كلاسيكي', icon: '🎨', color: '#1B3A5C' },
 };
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setThemeState] = useState<ThemeKey>(() => {
-    return (localStorage.getItem('app-theme') as ThemeKey) || 'classic';
+    return (localStorage.getItem('app-theme') as ThemeKey) || 'ocean-blue';
   });
 
   const setTheme = (t: ThemeKey) => {
@@ -28,9 +39,11 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove('theme-classic', 'theme-ocean', 'theme-desert', 'dark');
-    if (theme === 'dark') {
-      root.classList.add('dark');
+    // Remove all theme classes
+    const allThemeClasses = Object.keys(themes).map(k => `theme-${k}`);
+    root.classList.remove(...allThemeClasses, 'dark');
+    if (theme === 'midnight') {
+      root.classList.add('dark', 'theme-midnight');
     } else {
       root.classList.add(`theme-${theme}`);
     }

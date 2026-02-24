@@ -51,72 +51,36 @@
     --font-body: 'Tajawal', sans-serif;
   }
 
-  .theme-ocean {
-    --background: 200 25% 96%;
-    --foreground: 210 40% 12%;
-    --card: 0 0% 100%;
-    --card-foreground: 210 40% 12%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 40% 12%;
-    --primary: 195 80% 35%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 200 20% 88%;
-    --secondary-foreground: 210 30% 20%;
-    --muted: 200 18% 92%;
-    --muted-foreground: 200 12% 48%;
-    --accent: 170 80% 42%;
+  /* العدالة الأنيقة - Elegant Rose */
+  .theme-elegant-rose {
+    --background: 340 20% 97%;
+    --foreground: 340 30% 15%;
+    --card: 340 15% 100%;
+    --card-foreground: 340 30% 15%;
+    --popover: 340 15% 100%;
+    --popover-foreground: 340 30% 15%;
+    --primary: 340 55% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 340 15% 90%;
+    --secondary-foreground: 340 25% 25%;
+    --muted: 340 12% 93%;
+    --muted-foreground: 340 10% 50%;
+    --accent: 15 85% 55%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
-    --border: 200 18% 86%;
-    --input: 200 18% 86%;
-    --ring: 195 80% 35%;
-    --sidebar-background: 210 40% 12%;
-    --sidebar-foreground: 200 20% 85%;
-    --sidebar-primary: 170 80% 42%;
+    --border: 340 12% 88%;
+    --input: 340 12% 88%;
+    --ring: 340 55% 55%;
+    --sidebar-background: 340 35% 14%;
+    --sidebar-foreground: 340 15% 85%;
+    --sidebar-primary: 340 55% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 35% 18%;
-    --sidebar-accent-foreground: 200 20% 88%;
-    --sidebar-border: 210 30% 20%;
-    --sidebar-ring: 170 80% 42%;
-    --sidebar-muted: 200 20% 40%;
-    --success: 160 70% 40%;
-    --success-foreground: 0 0% 100%;
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 10%;
-    --info: 200 90% 50%;
-    --info-foreground: 0 0% 100%;
-  }
-
-  .theme-desert {
-    --background: 35 30% 95%;
-    --foreground: 30 30% 15%;
-    --card: 40 25% 99%;
-    --card-foreground: 30 30% 15%;
-    --popover: 40 25% 99%;
-    --popover-foreground: 30 30% 15%;
-    --primary: 30 50% 30%;
-    --primary-foreground: 40 30% 95%;
-    --secondary: 35 20% 88%;
-    --secondary-foreground: 30 25% 20%;
-    --muted: 35 18% 91%;
-    --muted-foreground: 30 15% 48%;
-    --accent: 40 85% 50%;
-    --accent-foreground: 30 40% 10%;
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 35 20% 85%;
-    --input: 35 20% 85%;
-    --ring: 30 50% 30%;
-    --sidebar-background: 30 35% 14%;
-    --sidebar-foreground: 35 20% 85%;
-    --sidebar-primary: 40 85% 50%;
-    --sidebar-primary-foreground: 30 40% 10%;
-    --sidebar-accent: 30 30% 20%;
-    --sidebar-accent-foreground: 35 20% 88%;
-    --sidebar-border: 30 25% 22%;
-    --sidebar-ring: 40 85% 50%;
-    --sidebar-muted: 30 20% 40%;
+    --sidebar-accent: 340 30% 20%;
+    --sidebar-accent-foreground: 340 15% 90%;
+    --sidebar-border: 340 25% 22%;
+    --sidebar-ring: 340 55% 60%;
+    --sidebar-muted: 340 20% 40%;
     --success: 145 65% 42%;
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 50%;
@@ -125,35 +89,379 @@
     --info-foreground: 0 0% 100%;
   }
 
-  .dark {
-    --background: 220 30% 8%;
-    --foreground: 220 15% 90%;
-    --card: 220 30% 12%;
-    --card-foreground: 220 15% 90%;
-    --popover: 220 30% 12%;
-    --popover-foreground: 220 15% 90%;
-    --primary: 25 95% 55%;
+  /* البنفسجي الملكي - Royal Purple */
+  .theme-royal-purple {
+    --background: 270 18% 97%;
+    --foreground: 270 30% 15%;
+    --card: 270 12% 100%;
+    --card-foreground: 270 30% 15%;
+    --popover: 270 12% 100%;
+    --popover-foreground: 270 30% 15%;
+    --primary: 265 75% 55%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 220 25% 18%;
-    --secondary-foreground: 220 15% 85%;
-    --muted: 220 25% 16%;
-    --muted-foreground: 220 15% 55%;
-    --accent: 25 95% 55%;
+    --secondary: 270 15% 90%;
+    --secondary-foreground: 270 25% 25%;
+    --muted: 270 12% 93%;
+    --muted-foreground: 270 10% 50%;
+    --accent: 290 65% 50%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 25% 18%;
-    --input: 220 25% 18%;
-    --ring: 25 95% 55%;
-    --sidebar-background: 220 35% 10%;
-    --sidebar-foreground: 220 15% 85%;
-    --sidebar-primary: 25 95% 55%;
+    --border: 270 12% 88%;
+    --input: 270 12% 88%;
+    --ring: 265 75% 55%;
+    --sidebar-background: 270 40% 12%;
+    --sidebar-foreground: 270 15% 85%;
+    --sidebar-primary: 265 75% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 30% 16%;
+    --sidebar-accent: 270 30% 18%;
+    --sidebar-accent-foreground: 270 15% 90%;
+    --sidebar-border: 270 28% 20%;
+    --sidebar-ring: 265 75% 60%;
+    --sidebar-muted: 270 20% 40%;
+    --success: 145 65% 42%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 10%;
+    --info: 205 85% 55%;
+    --info-foreground: 0 0% 100%;
+  }
+
+  /* القانوني الهوائي - Air Blue */
+  .theme-air-blue {
+    --background: 200 22% 97%;
+    --foreground: 210 30% 15%;
+    --card: 200 15% 100%;
+    --card-foreground: 210 30% 15%;
+    --popover: 200 15% 100%;
+    --popover-foreground: 210 30% 15%;
+    --primary: 200 65% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 200 15% 90%;
+    --secondary-foreground: 210 25% 25%;
+    --muted: 200 12% 93%;
+    --muted-foreground: 200 10% 50%;
+    --accent: 185 70% 45%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 200 12% 88%;
+    --input: 200 12% 88%;
+    --ring: 200 65% 60%;
+    --sidebar-background: 210 35% 14%;
+    --sidebar-foreground: 200 15% 85%;
+    --sidebar-primary: 200 65% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 30% 20%;
+    --sidebar-accent-foreground: 200 15% 90%;
+    --sidebar-border: 210 25% 22%;
+    --sidebar-ring: 200 65% 60%;
+    --sidebar-muted: 200 20% 40%;
+    --success: 145 65% 42%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 10%;
+    --info: 205 85% 55%;
+    --info-foreground: 0 0% 100%;
+  }
+
+  /* الأزرق الهوائي - Ocean Blue (default) */
+  .theme-ocean-blue {
+    --background: 215 25% 96%;
+    --foreground: 220 35% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 35% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 35% 12%;
+    --primary: 215 75% 45%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 215 18% 90%;
+    --secondary-foreground: 220 30% 20%;
+    --muted: 215 15% 93%;
+    --muted-foreground: 215 12% 48%;
+    --accent: 25 90% 52%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 215 15% 87%;
+    --input: 215 15% 87%;
+    --ring: 215 75% 45%;
+    --sidebar-background: 220 40% 12%;
+    --sidebar-foreground: 215 18% 85%;
+    --sidebar-primary: 25 90% 52%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 35% 18%;
+    --sidebar-accent-foreground: 215 18% 90%;
+    --sidebar-border: 220 30% 20%;
+    --sidebar-ring: 25 90% 52%;
+    --sidebar-muted: 215 20% 40%;
+    --success: 145 65% 42%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 10%;
+    --info: 205 85% 55%;
+    --info-foreground: 0 0% 100%;
+  }
+
+  /* هدوء المحيط - Ocean Calm */
+  .theme-ocean-calm {
+    --background: 185 22% 96%;
+    --foreground: 190 35% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 190 35% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 190 35% 12%;
+    --primary: 185 60% 35%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 185 15% 90%;
+    --secondary-foreground: 190 25% 25%;
+    --muted: 185 12% 93%;
+    --muted-foreground: 185 10% 48%;
+    --accent: 165 70% 40%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 185 12% 87%;
+    --input: 185 12% 87%;
+    --ring: 185 60% 35%;
+    --sidebar-background: 190 40% 12%;
+    --sidebar-foreground: 185 15% 85%;
+    --sidebar-primary: 165 70% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 190 30% 18%;
+    --sidebar-accent-foreground: 185 15% 90%;
+    --sidebar-border: 190 25% 20%;
+    --sidebar-ring: 165 70% 40%;
+    --sidebar-muted: 185 20% 40%;
+    --success: 145 65% 42%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 10%;
+    --info: 200 90% 50%;
+    --info-foreground: 0 0% 100%;
+  }
+
+  /* أخضر الغابة - Forest Green */
+  .theme-forest-green {
+    --background: 150 18% 96%;
+    --foreground: 155 35% 12%;
+    --card: 150 10% 100%;
+    --card-foreground: 155 35% 12%;
+    --popover: 150 10% 100%;
+    --popover-foreground: 155 35% 12%;
+    --primary: 152 55% 30%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 150 15% 90%;
+    --secondary-foreground: 155 25% 25%;
+    --muted: 150 12% 93%;
+    --muted-foreground: 150 10% 48%;
+    --accent: 130 60% 40%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 150 12% 87%;
+    --input: 150 12% 87%;
+    --ring: 152 55% 30%;
+    --sidebar-background: 155 40% 12%;
+    --sidebar-foreground: 150 15% 85%;
+    --sidebar-primary: 130 60% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 155 30% 18%;
+    --sidebar-accent-foreground: 150 15% 90%;
+    --sidebar-border: 155 25% 20%;
+    --sidebar-ring: 130 60% 40%;
+    --sidebar-muted: 150 20% 40%;
+    --success: 145 65% 42%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 10%;
+    --info: 205 85% 55%;
+    --info-foreground: 0 0% 100%;
+  }
+
+  /* غروب دافئ - Warm Sunset */
+  .theme-warm-sunset {
+    --background: 20 22% 96%;
+    --foreground: 15 35% 12%;
+    --card: 20 15% 100%;
+    --card-foreground: 15 35% 12%;
+    --popover: 20 15% 100%;
+    --popover-foreground: 15 35% 12%;
+    --primary: 12 65% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 20 15% 90%;
+    --secondary-foreground: 15 25% 25%;
+    --muted: 20 12% 93%;
+    --muted-foreground: 20 10% 48%;
+    --accent: 35 85% 52%;
+    --accent-foreground: 0 0% 10%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 20 12% 87%;
+    --input: 20 12% 87%;
+    --ring: 12 65% 48%;
+    --sidebar-background: 15 40% 12%;
+    --sidebar-foreground: 20 15% 85%;
+    --sidebar-primary: 35 85% 52%;
+    --sidebar-primary-foreground: 0 0% 10%;
+    --sidebar-accent: 15 30% 18%;
+    --sidebar-accent-foreground: 20 15% 90%;
+    --sidebar-border: 15 25% 20%;
+    --sidebar-ring: 35 85% 52%;
+    --sidebar-muted: 20 20% 40%;
+    --success: 145 65% 42%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 10%;
+    --info: 205 85% 55%;
+    --info-foreground: 0 0% 100%;
+  }
+
+  /* حلم اللافندر - Lavender Dream */
+  .theme-lavender-dream {
+    --background: 255 18% 97%;
+    --foreground: 260 25% 15%;
+    --card: 255 12% 100%;
+    --card-foreground: 260 25% 15%;
+    --popover: 255 12% 100%;
+    --popover-foreground: 260 25% 15%;
+    --primary: 258 45% 58%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 255 15% 90%;
+    --secondary-foreground: 260 20% 25%;
+    --muted: 255 12% 93%;
+    --muted-foreground: 255 10% 50%;
+    --accent: 280 50% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 255 12% 88%;
+    --input: 255 12% 88%;
+    --ring: 258 45% 58%;
+    --sidebar-background: 260 35% 14%;
+    --sidebar-foreground: 255 15% 85%;
+    --sidebar-primary: 258 45% 62%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 260 28% 20%;
+    --sidebar-accent-foreground: 255 15% 90%;
+    --sidebar-border: 260 22% 22%;
+    --sidebar-ring: 258 45% 62%;
+    --sidebar-muted: 255 20% 40%;
+    --success: 145 65% 42%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 10%;
+    --info: 205 85% 55%;
+    --info-foreground: 0 0% 100%;
+  }
+
+  /* وضع منتصف الليل - Midnight */
+  .theme-midnight,
+  .dark {
+    --background: 230 25% 8%;
+    --foreground: 220 15% 92%;
+    --card: 230 25% 12%;
+    --card-foreground: 220 15% 92%;
+    --popover: 230 25% 12%;
+    --popover-foreground: 220 15% 92%;
+    --primary: 215 80% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 230 20% 18%;
+    --secondary-foreground: 220 15% 85%;
+    --muted: 230 20% 16%;
+    --muted-foreground: 220 15% 55%;
+    --accent: 215 80% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 230 20% 18%;
+    --input: 230 20% 18%;
+    --ring: 215 80% 55%;
+    --sidebar-background: 230 30% 8%;
+    --sidebar-foreground: 220 15% 85%;
+    --sidebar-primary: 215 80% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 230 25% 14%;
     --sidebar-accent-foreground: 220 15% 90%;
-    --sidebar-border: 220 25% 16%;
-    --sidebar-ring: 25 95% 55%;
-    --sidebar-muted: 220 20% 40%;
+    --sidebar-border: 230 20% 16%;
+    --sidebar-ring: 215 80% 55%;
+    --sidebar-muted: 220 15% 40%;
+    --success: 145 65% 42%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 10%;
+    --info: 205 85% 55%;
+    --info-foreground: 0 0% 100%;
+  }
+
+  /* الذهبي الملكي - Royal Gold */
+  .theme-royal-gold {
+    --background: 42 25% 96%;
+    --foreground: 35 35% 12%;
+    --card: 42 18% 100%;
+    --card-foreground: 35 35% 12%;
+    --popover: 42 18% 100%;
+    --popover-foreground: 35 35% 12%;
+    --primary: 43 70% 42%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 42 15% 90%;
+    --secondary-foreground: 35 25% 25%;
+    --muted: 42 12% 93%;
+    --muted-foreground: 42 10% 48%;
+    --accent: 30 65% 45%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 42 12% 87%;
+    --input: 42 12% 87%;
+    --ring: 43 70% 42%;
+    --sidebar-background: 35 40% 12%;
+    --sidebar-foreground: 42 15% 85%;
+    --sidebar-primary: 43 70% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 35 30% 18%;
+    --sidebar-accent-foreground: 42 15% 90%;
+    --sidebar-border: 35 25% 20%;
+    --sidebar-ring: 43 70% 50%;
+    --sidebar-muted: 42 20% 40%;
+    --success: 145 65% 42%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 10%;
+    --info: 205 85% 55%;
+    --info-foreground: 0 0% 100%;
+  }
+
+  /* الأحمر القرمزي - Crimson Red */
+  .theme-crimson-red {
+    --background: 0 15% 97%;
+    --foreground: 0 25% 15%;
+    --card: 0 10% 100%;
+    --card-foreground: 0 25% 15%;
+    --popover: 0 10% 100%;
+    --popover-foreground: 0 25% 15%;
+    --primary: 355 75% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 12% 90%;
+    --secondary-foreground: 0 20% 25%;
+    --muted: 0 10% 93%;
+    --muted-foreground: 0 8% 50%;
+    --accent: 15 80% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 10% 88%;
+    --input: 0 10% 88%;
+    --ring: 355 75% 45%;
+    --sidebar-background: 0 35% 12%;
+    --sidebar-foreground: 0 12% 85%;
+    --sidebar-primary: 355 75% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 28% 18%;
+    --sidebar-accent-foreground: 0 12% 90%;
+    --sidebar-border: 0 22% 20%;
+    --sidebar-ring: 355 75% 50%;
+    --sidebar-muted: 0 15% 40%;
     --success: 145 65% 42%;
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 50%;

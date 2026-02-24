@@ -5,22 +5,24 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 const inspections = [
-  { id: 'QC-001', truck: 'SH-001', type: 'فحص استلام', inspector: 'أحمد المالكي', date: '2024-03-15', result: 'مطابق', items: 12, passed: 12 },
-  { id: 'QC-002', truck: 'SH-005', type: 'فحص بعد الصيانة', inspector: 'خالد الزهراني', date: '2024-03-14', result: 'مطابق جزئياً', items: 15, passed: 13 },
-  { id: 'QC-003', truck: 'SH-012', type: 'فحص دوري', inspector: 'فهد العتيبي', date: '2024-03-13', result: 'غير مطابق', items: 20, passed: 14 },
-  { id: 'QC-004', truck: 'SH-034', type: 'فحص استلام مواد', inspector: 'سعد القحطاني', date: '2024-03-12', result: 'مطابق', items: 8, passed: 8 },
+  { id: 'QC-001', truck: 'فولفو FH16 - أ ب د 1234', type: 'فحص استلام', inspector: 'أحمد المالكي', date: '2026-02-20', result: 'مطابق', items: 15, passed: 15 },
+  { id: 'QC-002', truck: 'مرسيدس أكتروس - هـ و ز 5678', type: 'فحص بعد الصيانة', inspector: 'خالد الزهراني', date: '2026-02-19', result: 'مطابق جزئياً', items: 18, passed: 16 },
+  { id: 'QC-003', truck: 'مان TGX - ح ط ي 9012', type: 'فحص دوري', inspector: 'فهد العتيبي', date: '2026-02-18', result: 'مطابق', items: 20, passed: 20 },
+  { id: 'QC-004', truck: 'سكانيا R450 - ك ل م 3456', type: 'فحص استلام مواد', inspector: 'سعد القحطاني', date: '2026-02-17', result: 'مطابق', items: 12, passed: 12 },
+  { id: 'QC-005', truck: 'إيسوزو FVR - ن س ع 7890', type: 'فحص دوري', inspector: 'عبدالله المطيري', date: '2026-02-16', result: 'غير مطابق', items: 20, passed: 14 },
 ];
 
 const vendorQuality = [
-  { vendor: 'شركة الإطارات المتقدمة', orders: 25, onTime: 23, qualityRate: 96, priceRate: 88 },
-  { vendor: 'مؤسسة قطع الغيار', orders: 18, onTime: 14, qualityRate: 82, priceRate: 90 },
-  { vendor: 'شركة الزيوت الوطنية', orders: 32, onTime: 30, qualityRate: 94, priceRate: 85 },
+  { vendor: 'بريدجستون للإطارات', orders: 45, onTime: 43, qualityRate: 96, priceRate: 88 },
+  { vendor: 'شركة الزيوت الوطنية (موبيل)', orders: 38, onTime: 36, qualityRate: 94, priceRate: 85 },
+  { vendor: 'مؤسسة قطع الغيار الأصلية', orders: 28, onTime: 22, qualityRate: 82, priceRate: 90 },
+  { vendor: 'شركة فلاتر مان الأصلية', orders: 32, onTime: 30, qualityRate: 93, priceRate: 87 },
 ];
 
 const resultStyle = (r: string) => { if (r === 'مطابق') return 'badge-active'; if (r === 'مطابق جزئياً') return 'badge-pending'; return 'badge-inactive'; };
 
 const inspectionFields: FormField[] = [
-  { name: 'truck', label: 'الشاحنة', type: 'text', required: true, placeholder: 'SH-001' },
+  { name: 'truck', label: 'الشاحنة', type: 'text', required: true, placeholder: 'رقم اللوحة أو اسم المعدة' },
   { name: 'type', label: 'نوع الفحص', type: 'select', required: true, options: [
     { value: 'فحص استلام', label: 'فحص استلام' }, { value: 'فحص بعد الصيانة', label: 'فحص بعد الصيانة' },
     { value: 'فحص دوري', label: 'فحص دوري' }, { value: 'فحص استلام مواد', label: 'فحص استلام مواد' },
@@ -49,15 +51,15 @@ const Quality = () => {
       <FormDialog open={showForm} onClose={() => setShowForm(false)} title="فحص جودة جديد" fields={inspectionFields} onSubmit={handleAdd} />
 
       <div className="page-header flex items-center justify-between">
-        <div><h1 className="page-title">إدارة الجودة</h1><p className="page-subtitle">فحوصات الجودة وتقييم الموردين ومعايير الأداء</p></div>
+        <div><h1 className="page-title">إدارة الجودة</h1><p className="page-subtitle">فحوصات الجودة وتقييم الموردين ومعايير الأداء - شركة خالد الظافر</p></div>
         <button onClick={() => setShowForm(true)} className="flex items-center gap-2 bg-accent text-accent-foreground px-4 py-2.5 rounded-lg text-sm font-medium hover:opacity-90"><Plus className="w-4 h-4" /> فحص جديد</button>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="stat-card"><div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center mb-3"><CheckCircle2 className="w-5 h-5 text-success" /></div><p className="text-2xl font-bold font-heading">91%</p><p className="text-sm text-muted-foreground">نسبة المطابقة</p></div>
+        <div className="stat-card"><div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center mb-3"><CheckCircle2 className="w-5 h-5 text-success" /></div><p className="text-2xl font-bold font-heading">93%</p><p className="text-sm text-muted-foreground">نسبة المطابقة</p></div>
         <div className="stat-card"><div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center mb-3"><ClipboardCheck className="w-5 h-5 text-accent" /></div><p className="text-2xl font-bold font-heading">{inspections.length}</p><p className="text-sm text-muted-foreground">فحوصات هذا الشهر</p></div>
         <div className="stat-card"><div className="w-10 h-10 rounded-lg bg-warning/10 flex items-center justify-center mb-3"><AlertTriangle className="w-5 h-5 text-warning" /></div><p className="text-2xl font-bold font-heading">1</p><p className="text-sm text-muted-foreground">ملاحظات مفتوحة</p></div>
-        <div className="stat-card"><div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3"><Shield className="w-5 h-5 text-primary" /></div><p className="text-2xl font-bold font-heading">3</p><p className="text-sm text-muted-foreground">موردين مقيمين</p></div>
+        <div className="stat-card"><div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3"><Shield className="w-5 h-5 text-primary" /></div><p className="text-2xl font-bold font-heading">{vendorQuality.length}</p><p className="text-sm text-muted-foreground">موردين مقيمين</p></div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -65,11 +67,11 @@ const Quality = () => {
           <h2 className="text-lg font-bold font-heading mb-4">سجل الفحوصات</h2>
           <div className="overflow-x-auto">
             <table className="data-table">
-              <thead><tr><th>الرقم</th><th>الشاحنة</th><th>النوع</th><th>الفاحص</th><th>النتيجة</th><th>البنود</th></tr></thead>
+              <thead><tr><th>الرقم</th><th>الشاحنة/المعدة</th><th>النوع</th><th>الفاحص</th><th>النتيجة</th><th>البنود</th></tr></thead>
               <tbody>
                 {inspections.map(i => (
                   <tr key={i.id}>
-                    <td className="font-medium text-primary">{i.id}</td><td>{i.truck}</td><td>{i.type}</td><td>{i.inspector}</td>
+                    <td className="font-medium text-primary">{i.id}</td><td className="text-xs">{i.truck}</td><td>{i.type}</td><td>{i.inspector}</td>
                     <td><span className={`badge-status ${resultStyle(i.result)}`}>{i.result}</span></td><td>{i.passed}/{i.items}</td>
                   </tr>
                 ))}
