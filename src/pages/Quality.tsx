@@ -51,7 +51,7 @@ const Quality = () => {
       <FormDialog open={showForm} onClose={() => setShowForm(false)} title="فحص جودة جديد" fields={inspectionFields} onSubmit={handleAdd} />
 
       <div className="page-header flex items-center justify-between">
-        <div><h1 className="page-title">إدارة الجودة</h1><p className="page-subtitle">فحوصات الجودة وتقييم الموردين ومعايير الأداء - شركة خالد الظافر</p></div>
+        <div><h1 className="page-title">إدارة الجودة</h1><p className="page-subtitle">فحوصات الجودة وتقييم الموردين ومعايير الأداء</p></div>
         <button onClick={() => setShowForm(true)} className="flex items-center gap-2 bg-accent text-accent-foreground px-4 py-2.5 rounded-lg text-sm font-medium hover:opacity-90"><Plus className="w-4 h-4" /> فحص جديد</button>
       </div>
 

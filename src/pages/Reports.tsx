@@ -137,13 +137,13 @@ const Reports = () => {
   };
 
   const shareWhatsApp = (name: string) => {
-    const text = encodeURIComponent(`تقرير: ${name}\nتم إنشاؤه من نظام خالد الظافر للخدمات اللوجستية`);
+    const text = encodeURIComponent(`تقرير: ${name}\nتم إنشاؤه من نظام مسار الخدمات اللوجستية`);
     window.open(`https://wa.me/?text=${text}`, '_blank');
   };
 
   const shareEmail = (name: string) => {
     const subject = encodeURIComponent(`تقرير: ${name}`);
-    const body = encodeURIComponent(`مرفق تقرير ${name}\nتم إنشاؤه من نظام خالد الظافر للخدمات اللوجستية`);
+    const body = encodeURIComponent(`مرفق تقرير ${name}\nتم إنشاؤه من نظام مسار الخدمات اللوجستية`);
     window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
   };
 
@@ -151,7 +151,7 @@ const Reports = () => {
     <div className="space-y-6">
       <div className="page-header">
         <h1 className="page-title">التقارير</h1>
-        <p className="page-subtitle">تقارير تشغيلية وإدارية شاملة لشركة خالد الظافر اللوجستية</p>
+        <p className="page-subtitle">تقارير تشغيلية وإدارية شاملة</p>
       </div>
 
       <div className="flex gap-2 overflow-x-auto pb-2">
