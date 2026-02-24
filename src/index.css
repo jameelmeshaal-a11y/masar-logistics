@@ -5,8 +5,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@300;400;500;700;800&display=swap');
 
 @layer base {
+  :root {
+    --radius: 0.625rem;
+    --font-heading: 'Cairo', sans-serif;
+    --font-body: 'Tajawal', sans-serif;
+  }
+
+  /* Default / Classic */
   :root,
-  .theme-classic {
+  [data-theme="classic"] {
     --background: 220 20% 97%;
     --foreground: 220 30% 15%;
     --card: 0 0% 100%;
@@ -26,7 +33,6 @@
     --border: 220 15% 88%;
     --input: 220 15% 88%;
     --ring: 220 60% 25%;
-    --radius: 0.625rem;
     --sidebar-background: 220 35% 14%;
     --sidebar-foreground: 220 15% 85%;
     --sidebar-primary: 25 95% 55%;
@@ -47,12 +53,9 @@
     --chart-3: 145 65% 42%;
     --chart-4: 205 85% 55%;
     --chart-5: 280 60% 55%;
-    --font-heading: 'Cairo', sans-serif;
-    --font-body: 'Tajawal', sans-serif;
   }
 
-  /* العدالة الأنيقة - Elegant Rose */
-  .theme-elegant-rose {
+  [data-theme="elegant-rose"] {
     --background: 340 20% 97%;
     --foreground: 340 30% 15%;
     --card: 340 15% 100%;
@@ -89,8 +92,7 @@
     --info-foreground: 0 0% 100%;
   }
 
-  /* البنفسجي الملكي - Royal Purple */
-  .theme-royal-purple {
+  [data-theme="royal-purple"] {
     --background: 270 18% 97%;
     --foreground: 270 30% 15%;
     --card: 270 12% 100%;
@@ -127,8 +129,7 @@
     --info-foreground: 0 0% 100%;
   }
 
-  /* القانوني الهوائي - Air Blue */
-  .theme-air-blue {
+  [data-theme="air-blue"] {
     --background: 200 22% 97%;
     --foreground: 210 30% 15%;
     --card: 200 15% 100%;
@@ -165,8 +166,7 @@
     --info-foreground: 0 0% 100%;
   }
 
-  /* الأزرق الهوائي - Ocean Blue (default) */
-  .theme-ocean-blue {
+  [data-theme="ocean-blue"] {
     --background: 215 25% 96%;
     --foreground: 220 35% 12%;
     --card: 0 0% 100%;
@@ -203,8 +203,7 @@
     --info-foreground: 0 0% 100%;
   }
 
-  /* هدوء المحيط - Ocean Calm */
-  .theme-ocean-calm {
+  [data-theme="ocean-calm"] {
     --background: 185 22% 96%;
     --foreground: 190 35% 12%;
     --card: 0 0% 100%;
@@ -241,8 +240,7 @@
     --info-foreground: 0 0% 100%;
   }
 
-  /* أخضر الغابة - Forest Green */
-  .theme-forest-green {
+  [data-theme="forest-green"] {
     --background: 150 18% 96%;
     --foreground: 155 35% 12%;
     --card: 150 10% 100%;
@@ -279,8 +277,7 @@
     --info-foreground: 0 0% 100%;
   }
 
-  /* غروب دافئ - Warm Sunset */
-  .theme-warm-sunset {
+  [data-theme="warm-sunset"] {
     --background: 20 22% 96%;
     --foreground: 15 35% 12%;
     --card: 20 15% 100%;
@@ -317,8 +314,7 @@
     --info-foreground: 0 0% 100%;
   }
 
-  /* حلم اللافندر - Lavender Dream */
-  .theme-lavender-dream {
+  [data-theme="lavender-dream"] {
     --background: 255 18% 97%;
     --foreground: 260 25% 15%;
     --card: 255 12% 100%;
@@ -355,8 +351,7 @@
     --info-foreground: 0 0% 100%;
   }
 
-  /* وضع منتصف الليل - Midnight */
-  .theme-midnight,
+  [data-theme="midnight"],
   .dark {
     --background: 230 25% 8%;
     --foreground: 220 15% 92%;
@@ -394,8 +389,7 @@
     --info-foreground: 0 0% 100%;
   }
 
-  /* الذهبي الملكي - Royal Gold */
-  .theme-royal-gold {
+  [data-theme="royal-gold"] {
     --background: 42 25% 96%;
     --foreground: 35 35% 12%;
     --card: 42 18% 100%;
@@ -432,8 +426,7 @@
     --info-foreground: 0 0% 100%;
   }
 
-  /* الأحمر القرمزي - Crimson Red */
-  .theme-crimson-red {
+  [data-theme="crimson-red"] {
     --background: 0 15% 97%;
     --foreground: 0 25% 15%;
     --card: 0 10% 100%;
