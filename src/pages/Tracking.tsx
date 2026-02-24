@@ -21,7 +21,7 @@ const Tracking = () => {
     <div className="space-y-6">
       <div className="page-header">
         <h1 className="page-title">التتبع والمراقبة</h1>
-        <p className="page-subtitle">تتبع مباشر لحركة شاحنات شركة خالد الظافر اللوجستية</p>
+        <p className="page-subtitle">تتبع مباشر لحركة الشاحنات والأسطول</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -37,7 +37,7 @@ const Tracking = () => {
             <div className="text-center">
               <MapPin className="w-16 h-16 mx-auto text-muted-foreground/20 mb-3" />
               <p className="text-muted-foreground font-medium">خريطة التتبع المباشر</p>
-              <p className="text-sm text-muted-foreground/60 mt-1">مرتبطة بنظام GPS لأسطول شركة خالد الظافر</p>
+              <p className="text-sm text-muted-foreground/60 mt-1">مرتبطة بنظام GPS للأسطول</p>
             </div>
             <div className="absolute top-20 right-32 w-3 h-3 rounded-full bg-success animate-pulse" title="الرياض" />
             <div className="absolute top-40 left-40 w-3 h-3 rounded-full bg-info animate-pulse" title="جدة" />

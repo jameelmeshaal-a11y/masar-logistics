@@ -66,9 +66,9 @@ const Dashboard = () => {
     <div className="space-y-6">
       <div className="page-header">
         <div className="flex items-center gap-3">
-          <img src="/images/kdl-hero.jpg" alt="KDL" className="w-12 h-12 rounded-xl object-cover" />
+           <img src="/images/kdl-hero.jpg" alt="مسار" className="w-12 h-12 rounded-xl object-cover" />
           <div>
-            <h1 className="page-title">شركة خالد الظافر وإخوانه للخدمات اللوجستية</h1>
+            <h1 className="page-title">مسار الخدمات اللوجستية</h1>
             <p className="page-subtitle">نظرة عامة على العمليات والأداء | خبرة تتخطى 45 عاماً</p>
           </div>
         </div>
