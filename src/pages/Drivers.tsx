@@ -5,14 +5,17 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 const drivers = [
-  { id: 'DRV-001', name: 'محمد أحمد الغامدي', idNumber: '1098765432', license: 'رخصة نقل ثقيل', licenseExpiry: '2025-06-15', phone: '0551234567', truck: 'SH-001', status: 'نشط', totalKm: '45,200', trips: 128 },
-  { id: 'DRV-002', name: 'خالد عبدالله العمري', idNumber: '1087654321', license: 'رخصة نقل ثقيل', licenseExpiry: '2024-12-20', phone: '0559876543', truck: 'SH-005', status: 'في إجازة', totalKm: '62,800', trips: 195 },
-  { id: 'DRV-003', name: 'فهد سعد السالم', idNumber: '1076543210', license: 'رخصة نقل ثقيل', licenseExpiry: '2025-03-10', phone: '0555551234', truck: 'SH-012', status: 'نشط', totalKm: '38,100', trips: 112 },
-  { id: 'DRV-004', name: 'سعد محمد الحربي', idNumber: '1065432109', license: 'رخصة نقل ثقيل', licenseExpiry: '2024-08-05', phone: '0553334455', truck: 'SH-034', status: 'نشط', totalKm: '71,500', trips: 230 },
-  { id: 'DRV-005', name: 'عبدالله فهد الشهري', idNumber: '1054321098', license: 'رخصة نقل ثقيل', licenseExpiry: '2025-01-28', phone: '0557778899', truck: '-', status: 'غير معين', totalKm: '15,300', trips: 45 },
+  { id: 'DRV-001', name: 'محمد أحمد الغامدي', idNumber: '1098765432', license: 'رخصة نقل ثقيل', licenseExpiry: '2025-06-15', phone: '0551234567', truck: 'فولفو FH16 - أ ب د 1234', status: 'نشط', totalKm: '145,200', trips: 428 },
+  { id: 'DRV-002', name: 'خالد عبدالله العمري', idNumber: '1087654321', license: 'رخصة نقل ثقيل', licenseExpiry: '2026-12-20', phone: '0559876543', truck: 'مرسيدس أكتروس - هـ و ز 5678', status: 'نشط', totalKm: '262,800', trips: 595 },
+  { id: 'DRV-003', name: 'فهد سعد السالم', idNumber: '1076543210', license: 'رخصة نقل ثقيل', licenseExpiry: '2025-03-10', phone: '0555551234', truck: 'مان TGX - ح ط ي 9012', status: 'في مهمة', totalKm: '198,100', trips: 412 },
+  { id: 'DRV-004', name: 'سعد محمد الحربي', idNumber: '1065432109', license: 'رخصة نقل ثقيل', licenseExpiry: '2026-08-05', phone: '0553334455', truck: 'سكانيا R450 - ك ل م 3456', status: 'نشط', totalKm: '321,500', trips: 730 },
+  { id: 'DRV-005', name: 'عبدالله فهد الشهري', idNumber: '1054321098', license: 'رخصة نقل ثقيل', licenseExpiry: '2025-01-28', phone: '0557778899', truck: 'إيسوزو FVR - ن س ع 7890', status: 'في إجازة', totalKm: '85,300', trips: 245 },
+  { id: 'DRV-006', name: 'أحمد علي المالكي', idNumber: '1043210987', license: 'رخصة نقل ثقيل', licenseExpiry: '2026-04-18', phone: '0556667788', truck: 'هينو 500 - ف ص ق 1357', status: 'نشط', totalKm: '178,600', trips: 389 },
+  { id: 'DRV-007', name: 'يوسف حسن الدوسري', idNumber: '1032109876', license: 'رخصة نقل ثقيل', licenseExpiry: '2025-09-22', phone: '0554443322', truck: '-', status: 'غير معين', totalKm: '52,300', trips: 145 },
+  { id: 'DRV-008', name: 'ناصر سالم القحطاني', idNumber: '1021098765', license: 'رخصة نقل ثقيل', licenseExpiry: '2026-02-14', phone: '0552221100', truck: 'فولفو FM - ر ش ت 2468', status: 'نشط', totalKm: '215,900', trips: 512 },
 ];
 
-const statusStyle = (s: string) => { if (s === 'نشط') return 'badge-active'; if (s === 'في إجازة') return 'badge-pending'; return 'badge-inactive'; };
+const statusStyle = (s: string) => { if (s === 'نشط' || s === 'في مهمة') return 'badge-active'; if (s === 'في إجازة') return 'badge-pending'; return 'badge-inactive'; };
 
 const driverFields: FormField[] = [
   { name: 'name', label: 'الاسم الكامل', type: 'text', required: true },
@@ -40,15 +43,15 @@ const Drivers = () => {
       <FormDialog open={showForm} onClose={() => setShowForm(false)} title="إضافة سائق جديد" fields={driverFields} onSubmit={handleAdd} />
 
       <div className="page-header flex items-center justify-between">
-        <div><h1 className="page-title">إدارة السائقين</h1><p className="page-subtitle">بيانات السائقين وربطهم بالشاحنات وتتبع الأداء</p></div>
+        <div><h1 className="page-title">إدارة السائقين</h1><p className="page-subtitle">بيانات السائقين وربطهم بالشاحنات وتتبع الأداء - {drivers.length} سائق</p></div>
         <button onClick={() => setShowForm(true)} className="flex items-center gap-2 bg-accent text-accent-foreground px-4 py-2.5 rounded-lg text-sm font-medium hover:opacity-90"><Plus className="w-4 h-4" /> إضافة سائق</button>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="stat-card"><p className="text-2xl font-bold font-heading">{drivers.length}</p><p className="text-sm text-muted-foreground">إجمالي السائقين</p></div>
-        <div className="stat-card"><p className="text-2xl font-bold font-heading text-success">{drivers.filter(d => d.status === 'نشط').length}</p><p className="text-sm text-muted-foreground">نشط</p></div>
-        <div className="stat-card"><p className="text-2xl font-bold font-heading text-warning">1</p><p className="text-sm text-muted-foreground">رخص قاربت على الانتهاء</p></div>
-        <div className="stat-card"><p className="text-2xl font-bold font-heading">710</p><p className="text-sm text-muted-foreground">إجمالي الرحلات</p></div>
+        <div className="stat-card"><p className="text-2xl font-bold font-heading text-success">{drivers.filter(d => d.status === 'نشط' || d.status === 'في مهمة').length}</p><p className="text-sm text-muted-foreground">نشط ومتاح</p></div>
+        <div className="stat-card"><p className="text-2xl font-bold font-heading text-warning">2</p><p className="text-sm text-muted-foreground">رخص قاربت على الانتهاء</p></div>
+        <div className="stat-card"><p className="text-2xl font-bold font-heading">{drivers.reduce((s, d) => s + d.trips, 0).toLocaleString()}</p><p className="text-sm text-muted-foreground">إجمالي الرحلات</p></div>
       </div>
 
       <div className="flex items-center gap-3">
@@ -71,8 +74,8 @@ const Drivers = () => {
               <span className={`badge-status ${statusStyle(driver.status)}`}>{driver.status}</span>
             </div>
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between"><span className="text-muted-foreground flex items-center gap-1.5"><Phone className="w-3.5 h-3.5" /> الجوال</span><span>{driver.phone}</span></div>
-              <div className="flex justify-between"><span className="text-muted-foreground flex items-center gap-1.5"><Truck className="w-3.5 h-3.5" /> الشاحنة</span><span className="font-medium">{driver.truck}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground flex items-center gap-1.5"><Phone className="w-3.5 h-3.5" /> الجوال</span><span dir="ltr">{driver.phone}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground flex items-center gap-1.5"><Truck className="w-3.5 h-3.5" /> الشاحنة</span><span className="font-medium text-xs">{driver.truck}</span></div>
               <div className="flex justify-between"><span className="text-muted-foreground flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> انتهاء الرخصة</span><span>{driver.licenseExpiry}</span></div>
               <div className="flex justify-between"><span className="text-muted-foreground">الكيلومترات</span><span>{driver.totalKm} كم</span></div>
               <div className="flex justify-between"><span className="text-muted-foreground">الرحلات</span><span>{driver.trips}</span></div>

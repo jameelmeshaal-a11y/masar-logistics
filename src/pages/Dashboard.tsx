@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import {
   Truck, ShoppingCart, Wrench, Warehouse, Users, MapPin,
   Shield, DollarSign, BarChart3, TrendingUp, TrendingDown,
-  AlertTriangle, Clock
+  AlertTriangle, Clock, Ship, Package
 } from 'lucide-react';
 import {
   PieChart, Pie, Cell, LineChart, Line, BarChart, Bar, AreaChart, Area,
@@ -10,52 +10,53 @@ import {
 } from 'recharts';
 
 const stats = [
-  { label: 'إجمالي الشاحنات', value: '48', change: '+3', up: true, icon: Truck, color: 'bg-primary/10 text-primary' },
-  { label: 'أوامر شراء نشطة', value: '12', change: '+5', up: true, icon: ShoppingCart, color: 'bg-accent/10 text-accent' },
-  { label: 'أوامر صيانة مفتوحة', value: '7', change: '-2', up: false, icon: Wrench, color: 'bg-info/10 text-info' },
-  { label: 'تنبيهات المخزون', value: '4', change: '+1', up: true, icon: AlertTriangle, color: 'bg-warning/10 text-warning' },
+  { label: 'إجمالي الشاحنات والمعدات', value: '185', change: '+12', up: true, icon: Truck, color: 'bg-primary/10 text-primary' },
+  { label: 'أوامر شراء نشطة', value: '23', change: '+8', up: true, icon: ShoppingCart, color: 'bg-accent/10 text-accent' },
+  { label: 'أوامر صيانة مفتوحة', value: '14', change: '-3', up: false, icon: Wrench, color: 'bg-info/10 text-info' },
+  { label: 'تنبيهات المخزون', value: '6', change: '+2', up: true, icon: AlertTriangle, color: 'bg-warning/10 text-warning' },
 ];
 
 const truckStatusData = [
-  { name: 'نشط', value: 35, color: '#06D6A0' },
-  { name: 'في الصيانة', value: 8, color: '#FFD166' },
-  { name: 'متوقف', value: 5, color: '#FF6B8A' },
+  { name: 'نشط', value: 142, color: '#06D6A0' },
+  { name: 'في الصيانة', value: 28, color: '#FFD166' },
+  { name: 'متوقف', value: 15, color: '#FF6B8A' },
 ];
 
 const maintenanceCostData = [
-  { month: 'يناير', cost: 45000 }, { month: 'فبراير', cost: 38000 },
-  { month: 'مارس', cost: 52000 }, { month: 'أبريل', cost: 41000 },
-  { month: 'مايو', cost: 48000 }, { month: 'يونيو', cost: 35000 },
+  { month: 'يناير', cost: 185000 }, { month: 'فبراير', cost: 162000 },
+  { month: 'مارس', cost: 198000 }, { month: 'أبريل', cost: 175000 },
+  { month: 'مايو', cost: 210000 }, { month: 'يونيو', cost: 155000 },
 ];
 
 const vendorPerformanceData = [
-  { name: 'الإطارات المتقدمة', score: 96, color: '#7B2FF7' },
-  { name: 'قطع الغيار', score: 82, color: '#4ECDC4' },
-  { name: 'الزيوت الوطنية', score: 94, color: '#FF8A5C' },
-  { name: 'الفلاتر', score: 88, color: '#FFD166' },
-  { name: 'البطاريات', score: 91, color: '#06D6A0' },
+  { name: 'بريدجستون للإطارات', score: 96, color: '#7B2FF7' },
+  { name: 'شركة الزيوت الوطنية', score: 94, color: '#4ECDC4' },
+  { name: 'مؤسسة قطع الغيار', score: 88, color: '#FF8A5C' },
+  { name: 'شركة الفلاتر المتقدمة', score: 91, color: '#FFD166' },
+  { name: 'بطاريات فارتا', score: 93, color: '#06D6A0' },
 ];
 
 const inventoryMovementData = [
-  { month: 'يناير', inbound: 120, outbound: 95 }, { month: 'فبراير', inbound: 98, outbound: 110 },
-  { month: 'مارس', inbound: 145, outbound: 88 }, { month: 'أبريل', inbound: 110, outbound: 102 },
-  { month: 'مايو', inbound: 130, outbound: 120 }, { month: 'يونيو', inbound: 115, outbound: 98 },
+  { month: 'يناير', inbound: 320, outbound: 285 }, { month: 'فبراير', inbound: 298, outbound: 310 },
+  { month: 'مارس', inbound: 445, outbound: 288 }, { month: 'أبريل', inbound: 310, outbound: 302 },
+  { month: 'مايو', inbound: 380, outbound: 320 }, { month: 'يونيو', inbound: 315, outbound: 298 },
 ];
 
 const maintenanceAlerts = [
-  { truck: 'شاحنة SH-012', type: 'صيانة دورية', due: 'اليوم', priority: 'عاجل' },
-  { truck: 'شاحنة SH-005', type: 'تغيير زيت', due: 'غداً', priority: 'متوسط' },
-  { truck: 'شاحنة SH-023', type: 'فحص كفرات', due: 'بعد 3 أيام', priority: 'عادي' },
+  { truck: 'شاحنة فولفو FH16 - لوحة أ ب د 1234', type: 'صيانة 100,000 كم', due: 'اليوم', priority: 'عاجل' },
+  { truck: 'رأس قاطرة مرسيدس أكتروس - لوحة هـ و ز 5678', type: 'تغيير زيت وفلاتر', due: 'غداً', priority: 'متوسط' },
+  { truck: 'شاحنة مبردة - لوحة ح ط ي 9012', type: 'فحص نظام التبريد', due: 'بعد 3 أيام', priority: 'عادي' },
+  { truck: 'رافعة شوكية كوماتسو FD30', type: 'صيانة دورية', due: 'بعد 5 أيام', priority: 'عادي' },
 ];
 
 const quickLinks = [
   { label: 'إدارة المشتريات', path: '/procurement', icon: ShoppingCart, desc: 'طلبات وأوامر الشراء' },
-  { label: 'إدارة الأسطول', path: '/fleet', icon: Truck, desc: 'الشاحنات والكفرات' },
+  { label: 'إدارة الأسطول', path: '/fleet', icon: Truck, desc: '185 شاحنة ومعدة' },
   { label: 'الصيانة والورشة', path: '/maintenance', icon: Wrench, desc: 'أوامر العمل والصيانة' },
   { label: 'المستودعات', path: '/warehouse', icon: Warehouse, desc: 'المخزون والأصناف' },
   { label: 'السائقين', path: '/drivers', icon: Users, desc: 'بيانات السائقين' },
-  { label: 'التتبع والمراقبة', path: '/tracking', icon: MapPin, desc: 'تتبع المركبات' },
-  { label: 'الجودة', path: '/quality', icon: Shield, desc: 'معايير الجودة' },
+  { label: 'التتبع والمراقبة', path: '/tracking', icon: MapPin, desc: 'تتبع المركبات GPS' },
+  { label: 'الجودة', path: '/quality', icon: Shield, desc: 'معايير الجودة والفحص' },
   { label: 'الإدارة المالية', path: '/finance', icon: DollarSign, desc: 'المدفوعات والأرصدة' },
   { label: 'التقارير', path: '/reports', icon: BarChart3, desc: 'التقارير والإحصائيات' },
 ];
@@ -64,8 +65,13 @@ const Dashboard = () => {
   return (
     <div className="space-y-6">
       <div className="page-header">
-        <h1 className="page-title">لوحة التحكم</h1>
-        <p className="page-subtitle">نظرة عامة على العمليات والأداء</p>
+        <div className="flex items-center gap-3">
+          <img src="/images/kdl-hero.jpg" alt="KDL" className="w-12 h-12 rounded-xl object-cover" />
+          <div>
+            <h1 className="page-title">شركة خالد الظافر وإخوانه للخدمات اللوجستية</h1>
+            <p className="page-subtitle">نظرة عامة على العمليات والأداء | خبرة تتخطى 45 عاماً</p>
+          </div>
+        </div>
       </div>
 
       {/* Stats */}
@@ -89,9 +95,8 @@ const Dashboard = () => {
 
       {/* Charts Row 1 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Truck Status Pie Chart */}
         <div className="bg-card rounded-xl border p-5">
-          <h2 className="text-lg font-bold font-heading mb-4">توزيع حالات الشاحنات</h2>
+          <h2 className="text-lg font-bold font-heading mb-4">توزيع حالات الأسطول</h2>
           <ResponsiveContainer width="100%" height={280}>
             <PieChart>
               <Pie data={truckStatusData} cx="50%" cy="45%" innerRadius={65} outerRadius={95} dataKey="value" paddingAngle={3}
@@ -108,7 +113,6 @@ const Dashboard = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* Maintenance Cost Line Chart */}
         <div className="bg-card rounded-xl border p-5">
           <h2 className="text-lg font-bold font-heading mb-4">تكاليف الصيانة الشهرية (ر.س)</h2>
           <ResponsiveContainer width="100%" height={250}>
@@ -117,7 +121,7 @@ const Dashboard = () => {
               <XAxis dataKey="month" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} />
               <Tooltip formatter={(v: number) => `${v.toLocaleString()} ر.س`} />
-              <Line type="monotone" dataKey="cost" stroke="#7B2FF7" strokeWidth={3} dot={{ fill: '#7B2FF7', r: 5 }} />
+              <Line type="monotone" dataKey="cost" stroke="hsl(var(--primary))" strokeWidth={3} dot={{ fill: 'hsl(var(--primary))', r: 5 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -125,7 +129,6 @@ const Dashboard = () => {
 
       {/* Charts Row 2 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Vendor Performance Bar Chart */}
         <div className="bg-card rounded-xl border p-5">
           <h2 className="text-lg font-bold font-heading mb-4">أداء الموردين</h2>
           <ResponsiveContainer width="100%" height={250}>
@@ -141,7 +144,6 @@ const Dashboard = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* Inventory Movement Area Chart */}
         <div className="bg-card rounded-xl border p-5">
           <h2 className="text-lg font-bold font-heading mb-4">حركة المخزون</h2>
           <ResponsiveContainer width="100%" height={250}>

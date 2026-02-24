@@ -9,66 +9,67 @@ const COLORS = ['#06D6A0', '#7B2FF7', '#FF6B8A', '#FFD166', '#4ECDC4', '#FF8A5C'
 
 const reportDefinitions = [
   {
-    name: 'تقرير استهلاك قطع الغيار', category: 'المستودعات', period: 'شهري', lastGenerated: '2024-03-15',
+    name: 'تقرير استهلاك قطع الغيار', category: 'المستودعات', period: 'شهري', lastGenerated: '2026-02-20',
     chartType: 'bar' as const,
     data: [
-      { name: 'إطارات', value: 45 }, { name: 'فلاتر', value: 120 }, { name: 'زيوت', value: 85 },
-      { name: 'بطاريات', value: 12 }, { name: 'فرامل', value: 28 }, { name: 'كهرباء', value: 35 },
+      { name: 'إطارات بريدجستون', value: 85 }, { name: 'فلاتر زيت', value: 220 }, { name: 'زيوت موبيل', value: 185 },
+      { name: 'بطاريات فارتا', value: 24 }, { name: 'فرامل', value: 48 }, { name: 'كهرباء', value: 65 },
     ],
   },
   {
-    name: 'تكلفة الصيانة حسب الشاحنة', category: 'الصيانة', period: 'شهري', lastGenerated: '2024-03-14',
+    name: 'تكلفة الصيانة حسب الشاحنة', category: 'الصيانة', period: 'شهري', lastGenerated: '2026-02-19',
     chartType: 'line' as const,
     data: [
-      { name: 'SH-001', value: 12500 }, { name: 'SH-005', value: 28000 }, { name: 'SH-012', value: 8500 },
-      { name: 'SH-023', value: 45000 }, { name: 'SH-034', value: 15000 },
+      { name: 'فولفو FH16', value: 42500 }, { name: 'مرسيدس أكتروس', value: 58000 }, { name: 'مان TGX', value: 28500 },
+      { name: 'سكانيا R450', value: 65000 }, { name: 'إيسوزو FVR', value: 15000 },
     ],
   },
   {
-    name: 'أداء الموردين', category: 'المشتريات', period: 'ربع سنوي', lastGenerated: '2024-03-01',
+    name: 'أداء الموردين', category: 'المشتريات', period: 'ربع سنوي', lastGenerated: '2026-02-01',
     chartType: 'bar' as const,
     data: [
-      { name: 'الإطارات المتقدمة', value: 96 }, { name: 'قطع الغيار', value: 82 },
-      { name: 'الزيوت الوطنية', value: 94 }, { name: 'الفلاتر', value: 88 },
+      { name: 'بريدجستون', value: 96 }, { name: 'موبيل', value: 94 },
+      { name: 'قطع غيار أصلية', value: 82 }, { name: 'فلاتر مان', value: 93 },
     ],
   },
   {
-    name: 'تقرير الكفرات (عمر/تكلفة/كم)', category: 'الأسطول', period: 'شهري', lastGenerated: '2024-03-15',
+    name: 'تقرير الكفرات (عمر/تكلفة/كم)', category: 'الأسطول', period: 'شهري', lastGenerated: '2026-02-20',
     chartType: 'pie' as const,
     data: [
-      { name: 'جديد', value: 24 }, { name: 'جيد', value: 48 }, { name: 'يحتاج تبديل', value: 12 }, { name: 'تالف', value: 4 },
+      { name: 'جديد', value: 64 }, { name: 'جيد', value: 148 }, { name: 'يحتاج تبديل', value: 32 }, { name: 'تالف', value: 8 },
     ],
   },
   {
-    name: 'مستويات المخزون والتنبيهات', category: 'المستودعات', period: 'أسبوعي', lastGenerated: '2024-03-15',
+    name: 'مستويات المخزون والتنبيهات', category: 'المستودعات', period: 'أسبوعي', lastGenerated: '2026-02-20',
     chartType: 'area' as const,
     data: [
-      { name: 'الأسبوع 1', value: 450, min: 200 }, { name: 'الأسبوع 2', value: 380, min: 200 },
-      { name: 'الأسبوع 3', value: 520, min: 200 }, { name: 'الأسبوع 4', value: 410, min: 200 },
+      { name: 'الأسبوع 1', value: 1450, min: 500 }, { name: 'الأسبوع 2', value: 1280, min: 500 },
+      { name: 'الأسبوع 3', value: 1620, min: 500 }, { name: 'الأسبوع 4', value: 1410, min: 500 },
     ],
   },
   {
-    name: 'تقرير المدفوعات والمستحقات', category: 'المالية', period: 'شهري', lastGenerated: '2024-03-15',
+    name: 'تقرير المدفوعات والمستحقات', category: 'المالية', period: 'شهري', lastGenerated: '2026-02-20',
     chartType: 'bar' as const,
     data: [
-      { name: 'يناير', paid: 85000, due: 25000 }, { name: 'فبراير', paid: 62000, due: 38000 },
-      { name: 'مارس', paid: 95000, due: 15000 },
+      { name: 'يناير', paid: 385000, due: 125000 }, { name: 'فبراير', paid: 462000, due: 88000 },
+      { name: 'مارس', paid: 295000, due: 215000 },
     ],
   },
   {
-    name: 'تقرير أداء السائقين', category: 'السائقين', period: 'شهري', lastGenerated: '2024-03-14',
+    name: 'تقرير أداء السائقين', category: 'السائقين', period: 'شهري', lastGenerated: '2026-02-19',
     chartType: 'bar' as const,
     data: [
-      { name: 'محمد أحمد', value: 92 }, { name: 'خالد العمري', value: 85 },
-      { name: 'فهد السالم', value: 88 }, { name: 'سعد الحربي', value: 95 },
+      { name: 'محمد الغامدي', value: 92 }, { name: 'خالد العمري', value: 95 },
+      { name: 'فهد السالم', value: 88 }, { name: 'سعد الحربي', value: 96 },
+      { name: 'أحمد المالكي', value: 91 }, { name: 'ناصر القحطاني', value: 94 },
     ],
   },
   {
-    name: 'تقرير الرحلات والكيلومترات', category: 'الأسطول', period: 'أسبوعي', lastGenerated: '2024-03-15',
+    name: 'تقرير الرحلات والكيلومترات', category: 'الأسطول', period: 'أسبوعي', lastGenerated: '2026-02-20',
     chartType: 'line' as const,
     data: [
-      { name: 'الأسبوع 1', value: 12500 }, { name: 'الأسبوع 2', value: 15800 },
-      { name: 'الأسبوع 3', value: 11200 }, { name: 'الأسبوع 4', value: 18500 },
+      { name: 'الأسبوع 1', value: 52500 }, { name: 'الأسبوع 2', value: 65800 },
+      { name: 'الأسبوع 3', value: 41200 }, { name: 'الأسبوع 4', value: 78500 },
     ],
   },
 ];
@@ -100,7 +101,7 @@ const Reports = () => {
           <LineChart data={report.data}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis dataKey="name" tick={{ fontSize: 11 }} /><YAxis tick={{ fontSize: 11 }} />
-            <Tooltip /><Line type="monotone" dataKey="value" stroke="#7B2FF7" strokeWidth={3} dot={{ fill: '#7B2FF7', r: 5 }} />
+            <Tooltip /><Line type="monotone" dataKey="value" stroke="hsl(var(--primary))" strokeWidth={3} dot={{ fill: 'hsl(var(--primary))', r: 5 }} />
           </LineChart>
         );
       case 'area':
@@ -136,13 +137,13 @@ const Reports = () => {
   };
 
   const shareWhatsApp = (name: string) => {
-    const text = encodeURIComponent(`تقرير: ${name}\nتم إنشاؤه من نظام إدارة اللوجستيات`);
+    const text = encodeURIComponent(`تقرير: ${name}\nتم إنشاؤه من نظام خالد الظافر للخدمات اللوجستية`);
     window.open(`https://wa.me/?text=${text}`, '_blank');
   };
 
   const shareEmail = (name: string) => {
     const subject = encodeURIComponent(`تقرير: ${name}`);
-    const body = encodeURIComponent(`مرفق تقرير ${name}\nتم إنشاؤه من نظام إدارة اللوجستيات`);
+    const body = encodeURIComponent(`مرفق تقرير ${name}\nتم إنشاؤه من نظام خالد الظافر للخدمات اللوجستية`);
     window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
   };
 
@@ -150,7 +151,7 @@ const Reports = () => {
     <div className="space-y-6">
       <div className="page-header">
         <h1 className="page-title">التقارير</h1>
-        <p className="page-subtitle">تقارير تشغيلية وإدارية شاملة مع إمكانية المشاركة</p>
+        <p className="page-subtitle">تقارير تشغيلية وإدارية شاملة لشركة خالد الظافر اللوجستية</p>
       </div>
 
       <div className="flex gap-2 overflow-x-auto pb-2">
@@ -163,7 +164,6 @@ const Reports = () => {
         ))}
       </div>
 
-      {/* Report detail modal */}
       {viewingReport !== null && (
         <div className="fixed inset-0 bg-foreground/50 z-50 flex items-center justify-center p-4" onClick={() => setViewingReport(null)}>
           <div className="bg-card rounded-2xl border shadow-xl w-full max-w-2xl p-6" onClick={e => e.stopPropagation()}>

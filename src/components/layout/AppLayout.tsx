@@ -93,8 +93,8 @@ const AppSidebar: React.FC<{ isOpen: boolean; onToggle: () => void }> = ({ isOpe
             <Truck className="w-5 h-5 text-sidebar-primary-foreground" />
           </div>
           <div>
-            <h1 className="text-base font-bold text-sidebar-foreground font-heading">نظام اللوجستيات</h1>
-            <p className="text-[11px] text-sidebar-muted">إدارة الأسطول والمشتريات</p>
+            <h1 className="text-base font-bold text-sidebar-foreground font-heading">خالد الظافر اللوجستية</h1>
+            <p className="text-[11px] text-sidebar-muted">KDL Logistics | منذ 1980</p>
           </div>
           <button onClick={onToggle} className="mr-auto lg:hidden text-sidebar-muted hover:text-sidebar-foreground">
             <X className="w-5 h-5" />
@@ -134,7 +134,6 @@ const AppSidebar: React.FC<{ isOpen: boolean; onToggle: () => void }> = ({ isOpe
             </div>
           ))}
 
-          {/* Settings (admin only) */}
           {role === 'admin' && (
             <div>
               <button onClick={() => setShowSettings(!showSettings)}
